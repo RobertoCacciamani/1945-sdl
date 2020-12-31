@@ -6,6 +6,7 @@
 #include <renderer.h>
 #include <gameobj.h>
 
+
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -38,7 +39,18 @@ int main() {
     char title[100];
     float update_time = 0.f;
     float time_counter = 0.f;
-    GameObject* player = NewGameObject(NewPoint(0,0), NewSize(50,50), "./assets/ui/life.png");
+    
+    GameObject player;
+    
+    NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
+    
+    SDL_Rect texture_rect;
+    texture_rect.x = 10;
+    texture_rect.y = 10; 
+    texture_rect.w = 50; 
+    texture_rect.h = 50;
+
+    SDL_Texture* texture_app = NewTexture(renderer, "./assets/player/bullet.png");
 
 
     boolean done = false;   
@@ -63,11 +75,13 @@ int main() {
             SDL_SetWindowTitle(window, title);
         }
 
-        
-        RenderGameObject(renderer, player);
-
-        // SDL_Texture* texture = NewTexture(renderer, player.texture_path);  
-        // RenderingTexture(renderer, texture, player->rect);
+        //RenderingTexture(renderer, texture_app, NewPoint(50,50), NewSize(50,50));
+        //RenderingTexture(renderer, texture_app, &texture_rect);
+        //SDL_RenderCopy(renderer, texture_app, NULL, &texture_rect);
+        RenderGameObject(renderer, &player);
+        //caso(renderer, texture_app, NewPoint(50,50), NewSize(50,50));
+        //SDL_Texture* texture = NewTexture(renderer, player.texture_path);  
+        //RenderingTexture(renderer, texture, player->rect);
 
         
 
