@@ -5,9 +5,13 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include <string.h>
+#include <stdlib.h>
 
 enum boolean_enum { false, true };
 typedef unsigned char boolean;
+
+typedef unsigned int uint;
 
 typedef struct {
     float Width;

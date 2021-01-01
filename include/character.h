@@ -3,13 +3,15 @@
 
 #include "gameobj.h"
 
-typedef struct{
+typedef struct
+{
     GameObject Go;
     int Hp;
     float Speed;
     char* Name;
-} character;
+} Character;
 
-void newCharacter(character* c, int hp, float speed, char* path, point p, size s);
+void newCharacter(Character* c, int hp, float speed, char* path, point p, size s);
+void RenderCharacter(SDL_Renderer* render, Character* c);
 
 #endif // CHARACTER_H

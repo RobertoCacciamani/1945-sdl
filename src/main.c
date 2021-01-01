@@ -5,6 +5,7 @@
 #include <common.h>
 #include <renderer.h>
 #include <gameobj.h>
+#include <input.h>
 
 
 int main() {
@@ -40,10 +41,13 @@ int main() {
     float update_time = 0.f;
     float time_counter = 0.f;
     
-    GameObject player;
+    // GameObject player;
     
-    NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
+    // NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
     
+    Character player;
+    newCharacter(&player, 100, 5, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
+
     SDL_Rect texture_rect;
     texture_rect.x = 10;
     texture_rect.y = 10; 
@@ -52,16 +56,10 @@ int main() {
 
     SDL_Texture* texture_app = NewTexture(renderer, "./assets/player/bullet.png");
 
-
     boolean done = false;   
     while (!done) {
+        SDL_RenderClear(renderer);
         SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                done = true;
-                break;
-            }
-        }
 
         last_count = curr_count;
         curr_count = SDL_GetPerformanceCounter();
@@ -75,19 +73,20 @@ int main() {
             SDL_SetWindowTitle(window, title);
         }
 
-        //RenderingTexture(renderer, texture_app, NewPoint(50,50), NewSize(50,50));
-        //RenderingTexture(renderer, texture_app, &texture_rect);
-        //SDL_RenderCopy(renderer, texture_app, NULL, &texture_rect);
-        RenderGameObject(renderer, &player);
-        //caso(renderer, texture_app, NewPoint(50,50), NewSize(50,50));
-        //SDL_Texture* texture = NewTexture(renderer, player.texture_path);  
-        //RenderingTexture(renderer, texture, player->rect);
-
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                done = true;
+                break;
+            }
+            Movement(&event, &done, &player, &delta_time);
+        }
         
+        //RenderGameObject(renderer, &player);
+        RenderCharacter(renderer, &player);
 
         // Clear
-        // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        // SDL_RenderClear(renderer);
+        //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        //SDL_RenderClear(renderer);
         
         // Blit
         SDL_RenderPresent(renderer);
