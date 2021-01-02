@@ -9,5 +9,5 @@ void NewGameObject(GameObject* go, point pos, size texture_size, char* texture_p
 void RenderGameObject(SDL_Renderer* render, GameObject* go){
     SDL_Texture* texture = NewTexture(render, go->texture_path);
     RenderingTexture(render, texture, go->position, go->texture_size);
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "render_go: %f, %f", go->position.x, go->position.y);
+    //SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "render_go: %f, %f", go->position.x, go->position.y);
 }

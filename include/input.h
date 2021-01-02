@@ -8,21 +8,15 @@
 typedef struct
 {
     boolean IsActive;
-
-    avector* buttons;
+    SDL_Scancode up;
+    SDL_Scancode down;
+    SDL_Scancode left;
+    SDL_Scancode right;
 } InputSystem;
 
-typedef struct
-{
-    SDL_KeyCode button;
-} key;
+void InitInputSystem(InputSystem* input_, char* system_buttons);
+void init_buttons(InputSystem* inputsys, char* system_movement);
 
-void InitInputSystem(InputSystem input_, char* system_buttons);
-void init_buttons(avector* buttons, char* system_movement);
-void set_button(key* k, SDL_KeyCode a);
-
-void HorizontalMovement(SDL_Event* event, boolean* done, Character* c, float* delta_time);
-void VerticalMovement(SDL_Event* event, boolean* done, Character* c, float* delta_time);
-void Movement(SDL_Event* event, boolean* done, Character* c, float* delta_time);
+void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* delta_time);
 
 #endif // INPUT_H

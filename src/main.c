@@ -35,7 +35,7 @@ int main() {
 
     Uint64 curr_count = SDL_GetPerformanceCounter();
     Uint64 last_count = curr_count;
-    float delta_time = 0.f;
+    double delta_time = 0.f;
     
     char title[100];
     float update_time = 0.f;
@@ -46,7 +46,10 @@ int main() {
     // NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
     
     Character player;
-    newCharacter(&player, 100, 5, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
+    newCharacter(&player, 100, 10000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
+
+    InputSystem inputSystem;
+    InitInputSystem(&inputSystem, "wasd");
 
     SDL_Rect texture_rect;
     texture_rect.x = 10;
@@ -54,7 +57,9 @@ int main() {
     texture_rect.w = 50; 
     texture_rect.h = 50;
 
-    SDL_Texture* texture_app = NewTexture(renderer, "./assets/player/bullet.png");
+    SDL_Texture* texture_app = NewTexture(renderer, "./assets/ui/life.png");
+    SDL_Texture* texture_base_ui = NewTexture(renderer, "./assets/ui/bottom.png");
+
 
     boolean done = false;   
     while (!done) {
@@ -78,12 +83,22 @@ int main() {
                 done = true;
                 break;
             }
-            Movement(&event, &done, &player, &delta_time);
+            Movement(&event, &inputSystem, &player, &delta_time);
         }
         
         //RenderGameObject(renderer, &player);
         RenderCharacter(renderer, &player);
+        
+        // UI BASE
+        RenderingTexture(renderer, texture_base_ui, NewPoint(0,win.Height-99), NewSize(win.Width, 100));
+        
+        // LIFES
+        RenderingTexture(renderer, texture_app, NewPoint(100,win.Height-90), NewSize(40, 40));
+        RenderingTexture(renderer, texture_app, NewPoint(55,win.Height-90), NewSize(40, 40));
+        RenderingTexture(renderer, texture_app, NewPoint(10,win.Height-90), NewSize(40, 40));
+        
 
+        
         // Clear
         //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         //SDL_RenderClear(renderer);
