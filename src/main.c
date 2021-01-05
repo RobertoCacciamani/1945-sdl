@@ -6,6 +6,7 @@
 #include <renderer.h>
 #include <gameobj.h>
 #include <input.h>
+#include <bullet.h>
 
 
 int main() {
@@ -48,18 +49,38 @@ int main() {
     Character player;
     newCharacter(&player, 100, 10000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
 
+    // Player player;
+    // NewPlayer(&player, "", 100, 20000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
+
     InputSystem inputSystem;
     InitInputSystem(&inputSystem, "wasd");
 
-    SDL_Rect texture_rect;
-    texture_rect.x = 10;
-    texture_rect.y = 10; 
-    texture_rect.w = 50; 
-    texture_rect.h = 50;
+    List* bullets = NewList();
+    // todo: fare funzione newBulletsList
+    Bullet bullet0 = NewBullet(playerBullet);
+    Bullet bullet1 = NewBullet(playerBullet);
+    Bullet bullet2 = NewBullet(playerBullet);
+    Bullet bullet3 = NewBullet(playerBullet);
+    Bullet bullet4 = NewBullet(playerBullet);
+    Bullet bullet5 = NewBullet(playerBullet);
+    Bullet bullet6 = NewBullet(playerBullet);
+    Bullet bullet7 = NewBullet(playerBullet);
+    Bullet bullet8 = NewBullet(playerBullet);
+    Bullet bullet9 = NewBullet(playerBullet);
+    AddElemList(bullets, &bullet0);
+    AddElemList(bullets, &bullet1);
+    AddElemList(bullets, &bullet2);
+    AddElemList(bullets, &bullet3);
+    AddElemList(bullets, &bullet4);
+    AddElemList(bullets, &bullet5);
+    AddElemList(bullets, &bullet6);
+    AddElemList(bullets, &bullet7);
+    AddElemList(bullets, &bullet8);
+    AddElemList(bullets, &bullet9);
+    // end todo
 
     SDL_Texture* texture_app = NewTexture(renderer, "./assets/ui/life.png");
     SDL_Texture* texture_base_ui = NewTexture(renderer, "./assets/ui/bottom.png");
-
 
     boolean done = false;   
     while (!done) {
@@ -83,12 +104,14 @@ int main() {
                 done = true;
                 break;
             }
-            Movement(&event, &inputSystem, &player, &delta_time);
+            else Movement(renderer, &event, &inputSystem, &player, &win, &delta_time, bullets);
         }
         
-        //RenderGameObject(renderer, &player);
+        //RenderGameObject(renderer, &player.Go);
         RenderCharacter(renderer, &player);
         
+        RenderingBullets(renderer, bullets, delta_time);
+
         // UI BASE
         RenderingTexture(renderer, texture_base_ui, NewPoint(0,win.Height-99), NewSize(win.Width, 100));
         
@@ -96,8 +119,6 @@ int main() {
         RenderingTexture(renderer, texture_app, NewPoint(100,win.Height-90), NewSize(40, 40));
         RenderingTexture(renderer, texture_app, NewPoint(55,win.Height-90), NewSize(40, 40));
         RenderingTexture(renderer, texture_app, NewPoint(10,win.Height-90), NewSize(40, 40));
-        
-
         
         // Clear
         //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -108,10 +129,12 @@ int main() {
     }
 
     //Clean Up
-    // SDL_DestroyRenderer(renderer);
-    // SDL_DestroyWindow(window);  
-    // SDL_Quit();
     CloseWindow(renderer, window);
+
+    DestroyList(bullets);
+    free(&inputSystem);
+    free(&player);
+    free(&win);
 
     return 0;
 }

@@ -8,7 +8,6 @@ typedef struct
     GameObject Go;
     int Hp;
     float Speed;
-    char* Name;
 } Character;
 
 void newCharacter(Character* c, int hp, float speed, char* path, point p, size s);

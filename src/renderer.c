@@ -10,12 +10,11 @@ SDL_Texture* NewTexture(SDL_Renderer* renderer, char* path_file){
     return (SDL_Texture*)IMG_LoadTexture(renderer, path_file); 
 }
 
-SDL_Rect* NewRect(SDL_Rect* texture_rect, point p, size s){
+void NewRect(SDL_Rect* texture_rect, point p, size s){
     texture_rect->x = p.x;
     texture_rect->y = p.y; 
     texture_rect->w = s.Width; 
     texture_rect->h = s.Height;
-    return &texture_rect;
 }
 
 void NewRect_with_param(SDL_Rect* texture_rect, float x, float y, float width, float height){

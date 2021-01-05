@@ -43,7 +43,17 @@ foreach (_variableName ${_variableNames})
 endforeach()
 ]] 
 
-add_executable(SDL_1945 src/main.c src/common.c src/renderer.c src/gameobj.c src/character.c)
+add_executable(SDL_1945 
+                        src/main.c 
+                        src/common.c 
+                        src/renderer.c 
+                        src/gameobj.c 
+                        src/character.c 
+                        src/list.c 
+                        src/input.c
+                        src/player.c
+                        src/bullet.c)
+                        
 # link diretto sulla .lib
 target_link_libraries(SDL_1945 
   ${SDL2_LIBRARY}
