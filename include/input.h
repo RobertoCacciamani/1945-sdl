@@ -16,12 +16,13 @@ typedef struct
     SDL_Scancode shoot;
 } InputSystem;
 
-void InitInputSystem(InputSystem* input_, char* system_buttons);
+InputSystem* NewInputSystem(char* system_buttons);
+void DestroyInputSystem(InputSystem* input_);
 void init_buttons(InputSystem* inputsys, char* system_movement);
 
 void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, Character* c,
-                 size* window, double* delta_time, List* bullets);
+                 Size* window, double* delta_time, List* bullets);
 
-void shoot (SDL_Renderer* renderer, Character* c, size* window, double* deltatime, List* bullets);
+void shoot (SDL_Renderer* renderer, Character* c, Size* window, double* deltatime, List* bullets);
 
 #endif // INPUT_H

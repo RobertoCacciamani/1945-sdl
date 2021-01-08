@@ -21,40 +21,46 @@ void init_buttons(InputSystem* inputsys, char* system_movement){
     }
 }
 
-void InitInputSystem(InputSystem* input_, char* system_buttons){
+InputSystem* NewInputSystem(char* system_buttons){
+    InputSystem* input_ = (InputSystem*)calloc(1, sizeof(InputSystem));
     input_->IsActive = true;
     init_buttons(input_, system_buttons);
+    return input_;
 }
 
-void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, Character* c, size* window, double* delta_time, List* bullets){
+void DestroyInputSystem(InputSystem* input_){
+    free(input_);
+}
+
+void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, Character* c, Size* window, double* delta_time, List* bullets){
     if(inputSys->IsActive){
         if (event->type == SDL_KEYDOWN)
         {
             if(event->key.keysym.scancode == inputSys->up){  // up
-                if (c->Go.position.y > 0)
+                if (c->Go->position.y > 0)
                 {
-                    c->Go.position.y += -1 * c->Speed * (*delta_time);
+                    c->Go->position.y += -1 * c->Speed * (*delta_time);
                     //printf("Movement called: up\n");
                 }
             }
             if(event->key.keysym.scancode == inputSys->left){  // left
-                if (c->Go.position.x > 0)
+                if (c->Go->position.x > 0)
                 {
-                    c->Go.position.x += -1 * c->Speed * (*delta_time);
+                    c->Go->position.x += -1 * c->Speed * (*delta_time);
                     //printf("Movement called: left\n");
                 }
             }
             if(event->key.keysym.scancode == inputSys->down){  // down
-                if (c->Go.position.y < (window->Height - 95) - c->Go.texture_size.Height)
+                if (c->Go->position.y < (window->Height - 95) - c->Go->texture_size.Height)
                 {
-                    c->Go.position.y += 1 * c->Speed * (*delta_time);
+                    c->Go->position.y += 1 * c->Speed * (*delta_time);
                     //printf("Movement called: down\n");
                 }
             }
             if(event->key.keysym.scancode == inputSys->right){  // right
-                if (c->Go.position.x < window->Width - c->Go.texture_size.Width)
+                if (c->Go->position.x < window->Width - c->Go->texture_size.Width)
                 {
-                    c->Go.position.x += 1 * c->Speed * (*delta_time);
+                    c->Go->position.x += 1 * c->Speed * (*delta_time);
                     //printf("Movement called: right\n");
                 }
             }
@@ -65,8 +71,8 @@ void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, C
     }
 }
 
-void shoot (SDL_Renderer* renderer, Character* c, size* window, double* deltatime, List* bullets){
-    if (c->Go.position.y > 0)
+void shoot (SDL_Renderer* renderer, Character* c, Size* window, double* deltatime, List* bullets){
+    if (c->Go->position.y > 0)
     {
         int count = 0;
         int index = 0;
@@ -75,12 +81,13 @@ void shoot (SDL_Renderer* renderer, Character* c, size* window, double* deltatim
         while (each)
         {
             Node* next = each->next;
-            if (!((Bullet*)each->data)->IsActive)
+            if (((Bullet*)each->data)->Go->IsActive == false)
             {
-                ((Bullet*)each->data)->IsActive = true;
-                ((Bullet*)each->data)->Go.position.x = c->Go.position.x + (c->Go.texture_size.Width / 2) - 5;
-                ((Bullet*)each->data)->Go.position.y = c->Go.position.y + ((Bullet*)each->data)->Go.texture_size.Height;
+                ((Bullet*)each->data)->Go->IsActive = true;
+                ((Bullet*)each->data)->Go->position.x = c->Go->position.x + (c->Go->texture_size.Width * 0.5f) - (((Bullet*)each->data)->Go->texture_size.Width * 0.5f);
+                ((Bullet*)each->data)->Go->position.y = c->Go->position.y + ((Bullet*)each->data)->Go->texture_size.Height;
                 index = count;
+                printf("count: %d\nactive: %d\n", index, (int)((Bullet*)each->data)->Go->IsActive);
                 break;
             }
             count++;

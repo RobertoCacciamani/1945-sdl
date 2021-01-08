@@ -1,17 +1,25 @@
 #include <common.h>
 
-size NewSize(float width, float height)
+Size NewSize(float width, float height)
 {
-    size win;
+    Size win = *(Size*)calloc(1, sizeof(Size));
     win.Width = width;
     win.Height = height;
     return win;
 }
 
-point NewPoint(float x, float y)
+Point NewPoint(float x, float y)
 {
-    point point;
+    Point point = *(Point*)calloc(1, sizeof(Point));
     point.x = x;
     point.y = y;
     return point;
+}
+
+void DestroySize(Size* s){
+    free(s);
+}
+
+void DestroyPoint(Point* p){
+    free(p);
 }

@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "list.h"
 
 enum boolean_enum { false, true };
 typedef unsigned char boolean;
@@ -18,16 +18,17 @@ typedef unsigned int uint;
 typedef struct {
     float Width;
     float Height;
-} size;
+} Size;
 
 typedef struct {
     float x;
     float y;
-} point;
+} Point;
 
-size NewSize(float width, float height);
+Size NewSize(float, float);
+Point NewPoint(float, float);
 
-point NewPoint(float x, float y);
-
+void DestroySize(Size*);
+void DestroyPoint(Point*);
 
 #endif // COMMON_H

@@ -5,12 +5,14 @@
 
 typedef struct
 {
-    GameObject Go;
     int Hp;
     float Speed;
+    GameObject* Go;
 } Character;
 
-void newCharacter(Character* c, int hp, float speed, char* path, point p, size s);
+Character* NewCharacter(int hp, float speed, char* path, Point p, Size s);
 void RenderCharacter(SDL_Renderer* render, Character* c);
+
+void DestroyCharacter(Character* c);
 
 #endif // CHARACTER_H

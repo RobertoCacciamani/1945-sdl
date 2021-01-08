@@ -12,7 +12,7 @@
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
-    size win = NewSize(640, 480);
+    Size win = NewSize(640, 480);
 
     SDL_Window* window = SDL_CreateWindow(
         "1945",
@@ -34,6 +34,11 @@ int main() {
         return 2;
     }
 
+    // if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+    //     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "could not initialize sdl_image: %s\n", IMG_GetError());
+    //     return false;
+    // }
+
     Uint64 curr_count = SDL_GetPerformanceCounter();
     Uint64 last_count = curr_count;
     double delta_time = 0.f;
@@ -46,41 +51,42 @@ int main() {
     
     // NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
     
-    Character player;
-    newCharacter(&player, 100, 10000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
+    Character* player = NewCharacter(100, 15000, "./assets/ui/life.png", NewPoint(290,180), NewSize(50,50));
 
     // Player player;
     // NewPlayer(&player, "", 100, 20000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
 
-    InputSystem inputSystem;
-    InitInputSystem(&inputSystem, "wasd");
+    InputSystem* inputSystem = NewInputSystem("wasd");
+
 
     List* bullets = NewList();
     // todo: fare funzione newBulletsList
-    Bullet bullet0 = NewBullet(playerBullet);
-    Bullet bullet1 = NewBullet(playerBullet);
-    Bullet bullet2 = NewBullet(playerBullet);
-    Bullet bullet3 = NewBullet(playerBullet);
-    Bullet bullet4 = NewBullet(playerBullet);
-    Bullet bullet5 = NewBullet(playerBullet);
-    Bullet bullet6 = NewBullet(playerBullet);
-    Bullet bullet7 = NewBullet(playerBullet);
-    Bullet bullet8 = NewBullet(playerBullet);
-    Bullet bullet9 = NewBullet(playerBullet);
-    AddElemList(bullets, &bullet0);
-    AddElemList(bullets, &bullet1);
-    AddElemList(bullets, &bullet2);
-    AddElemList(bullets, &bullet3);
-    AddElemList(bullets, &bullet4);
-    AddElemList(bullets, &bullet5);
-    AddElemList(bullets, &bullet6);
-    AddElemList(bullets, &bullet7);
-    AddElemList(bullets, &bullet8);
-    AddElemList(bullets, &bullet9);
+    // Bullet* b = NewBullet(playerBullet); 
+    // AddElemList(bullets, b);
+    // printf("cose\n");
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
+    // AddElemList(bullets, NewBullet(playerBullet));
     // end todo
 
-    SDL_Texture* texture_app = NewTexture(renderer, "./assets/ui/life.png");
-    SDL_Texture* texture_base_ui = NewTexture(renderer, "./assets/ui/bottom.png");
+    //elemInList(bullets, 10); //Bullet, NewBullet);
+    GenericAddElemList(bullets, 10, "bullet", playerBullet);
+
+    GameObject* life1 = NewGameObject(NewPoint(100,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
+    GameObject* life2 = NewGameObject(NewPoint(55,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
+    GameObject* life3 = NewGameObject(NewPoint(10,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
+
+    GameObject* ui_bottom = NewGameObject(NewPoint(0,win.Height-99), NewSize(win.Width, 100), "./assets/ui/bottom.png");
+    GameObject* background = NewGameObject(NewPoint(0, 0), NewSize(640, 380), "./assets/map/water.png");
+    //Texture* background = NewTexture_("./assets/map/water.png", NewSize(640, 380));
+    //Texture* background2 = NewTexture_("./assets/map/water.png", NewSize(640, 380));
 
     boolean done = false;   
     while (!done) {
@@ -104,37 +110,47 @@ int main() {
                 done = true;
                 break;
             }
-            else Movement(renderer, &event, &inputSystem, &player, &win, &delta_time, bullets);
+            else Movement(renderer, &event, inputSystem, player, &win, &delta_time, bullets);
         }
         
-        //RenderGameObject(renderer, &player.Go);
-        RenderCharacter(renderer, &player);
-        
+        // BACKGROUND
+        //RenderingTexture_(renderer, background, NewPoint(0,0));
+        RenderGameObject(renderer, background);
+
         RenderingBullets(renderer, bullets, delta_time);
+        
+        RenderCharacter(renderer, player);
 
         // UI BASE
-        RenderingTexture(renderer, texture_base_ui, NewPoint(0,win.Height-99), NewSize(win.Width, 100));
-        
+        RenderGameObject(renderer, ui_bottom);
+
         // LIFES
-        RenderingTexture(renderer, texture_app, NewPoint(100,win.Height-90), NewSize(40, 40));
-        RenderingTexture(renderer, texture_app, NewPoint(55,win.Height-90), NewSize(40, 40));
-        RenderingTexture(renderer, texture_app, NewPoint(10,win.Height-90), NewSize(40, 40));
+        RenderGameObject(renderer, life1);
+        RenderGameObject(renderer, life2);
+        RenderGameObject(renderer, life3);
         
         // Clear
         //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         //SDL_RenderClear(renderer);
         
         // Blit
+        //SDL_UpperBlit(&background->Surface_, , window, win);
+        //SDL_UpdateWindowSurface(window);
         SDL_RenderPresent(renderer);
     }
 
     //Clean Up
     CloseWindow(renderer, window);
 
+    DestroyGameObject(life1);
+    DestroyGameObject(life2);
+    DestroyGameObject(life3);
+    DestroyGameObject(ui_bottom);
+    DestroyGameObject(background);
+
     DestroyList(bullets);
-    free(&inputSystem);
-    free(&player);
-    free(&win);
+    DestroyCharacter(player);
+    DestroyInputSystem(inputSystem);
 
     return 0;
 }

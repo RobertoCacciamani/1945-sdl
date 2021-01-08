@@ -1,7 +1,7 @@
 #include "list.h"
 
 List* NewList(){
-    List* list = (List*)malloc(sizeof(List));
+    List* list = (List*)calloc(1, sizeof(List));
     list->__head = NULL;
     list->__tail = NULL;
     return list;
@@ -19,7 +19,7 @@ void DestroyList(List* list){
 }
 
 void AddElemList(List* list, void* elem){
-    Node* node = (Node*)malloc(sizeof(Node));
+    Node* node = (Node*)calloc(1, sizeof(Node));
     node->data = elem;
     node->next = NULL;
     

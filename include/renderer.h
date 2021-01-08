@@ -2,13 +2,11 @@
 #define RENDERER_H
 #include "common.h"
 
-int RenderingTexture(SDL_Renderer* r, SDL_Texture* tex, point p, size s);
+int RenderingTexture(SDL_Renderer* r, SDL_Texture* tex, Point p, Size s);
 
 SDL_Texture* NewTexture(SDL_Renderer* renderer, char* path_file);
 
-void NewRect(SDL_Rect* texture_rect, point p, size s);
-
-void NewRect_with_param(SDL_Rect* texture_rect, float x, float y, float width, float height);
+//void NewRect(SDL_Rect* rect_, Point p, Size s);
 
 void CloseWindow(SDL_Renderer* r, SDL_Window* win);
 
