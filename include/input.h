@@ -20,9 +20,8 @@ InputSystem* NewInputSystem(char* system_buttons);
 void DestroyInputSystem(InputSystem* input_);
 void init_buttons(InputSystem* inputsys, char* system_movement);
 
-void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, Character* c,
-                 Size* window, double* delta_time, List* bullets);
+void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* delta_time, List* bullets);
 
-void shoot (SDL_Renderer* renderer, Character* c, Size* window, double* deltatime, List* bullets);
+void shoot (Character* c, List* bullets);
 
 #endif // INPUT_H

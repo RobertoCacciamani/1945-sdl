@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define HEIGHT_WINDOW 480
+#define WIDTH_WINDOW 640
+
 #include "SDL.h"
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
@@ -8,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "list.h"
 
 enum boolean_enum { false, true };
@@ -25,8 +29,11 @@ typedef struct {
     float y;
 } Point;
 
-Size NewSize(float, float);
-Point NewPoint(float, float);
+Size* NewSize(float, float);
+Point* NewPoint(float, float);
+
+int GetRandomInRange(int, int);
+Point* RandomPoint(Size*);
 
 void DestroySize(Size*);
 void DestroyPoint(Point*);

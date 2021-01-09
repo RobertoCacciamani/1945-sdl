@@ -12,14 +12,14 @@
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
 
-    Size win = NewSize(640, 480);
+    Size* win = NewSize(WIDTH_WINDOW, HEIGHT_WINDOW);
 
     SDL_Window* window = SDL_CreateWindow(
         "1945",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        win.Width,
-        win.Height,
+        win->Width,
+        win->Height,
         0
     );
 
@@ -45,48 +45,38 @@ int main() {
     
     char title[100];
     float update_time = 0.f;
-    float time_counter = 0.f;
+    //float time_counter = 0.f;
     
     // GameObject player;
     
     // NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
-    
-    Character* player = NewCharacter(100, 15000, "./assets/ui/life.png", NewPoint(290,180), NewSize(50,50));
+
+    Character* player = NewCharacter(100, 15000, (char*)"./assets/player/myplane_strip3.png", NewPoint(290,180), NewSize(65,65));
+    AddAnimation(player, "main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Go->position->x,0), player->Go->texture_size), 3);
 
     // Player player;
     // NewPlayer(&player, "", 100, 20000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
 
-    InputSystem* inputSystem = NewInputSystem("wasd");
+    InputSystem* inputSystem = NewInputSystem((char*)"wasd");
 
 
     List* bullets = NewList();
-    // todo: fare funzione newBulletsList
-    // Bullet* b = NewBullet(playerBullet); 
-    // AddElemList(bullets, b);
-    // printf("cose\n");
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // AddElemList(bullets, NewBullet(playerBullet));
-    // end todo
+    GenericAddElemList(bullets, 10, (char*)"bullet", playerBullet);
 
-    //elemInList(bullets, 10); //Bullet, NewBullet);
-    GenericAddElemList(bullets, 10, "bullet", playerBullet);
+    List* Islands = NewList();
+    GenericAddElemList(Islands, 2, (char*)"island", Normal);
+    GenericAddElemList(Islands, 2, (char*)"island", Vulcan);
+    GenericAddElemList(Islands, 2, (char*)"island", Sand);
 
-    GameObject* life1 = NewGameObject(NewPoint(100,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
-    GameObject* life2 = NewGameObject(NewPoint(55,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
-    GameObject* life3 = NewGameObject(NewPoint(10,win.Height-90), NewSize(40, 40), "./assets/ui/life.png");
+    List* Water = NewList();
+    GenericAddElemList(Water, 1, (char*)"background", 0);
 
-    GameObject* ui_bottom = NewGameObject(NewPoint(0,win.Height-99), NewSize(win.Width, 100), "./assets/ui/bottom.png");
-    GameObject* background = NewGameObject(NewPoint(0, 0), NewSize(640, 380), "./assets/map/water.png");
-    //Texture* background = NewTexture_("./assets/map/water.png", NewSize(640, 380));
-    //Texture* background2 = NewTexture_("./assets/map/water.png", NewSize(640, 380));
+    GameObject* life1 = NewGameObject(NewPoint(100,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
+    GameObject* life2 = NewGameObject(NewPoint(55,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
+    GameObject* life3 = NewGameObject(NewPoint(10,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
+
+    GameObject* ui_bottom = NewGameObject(NewPoint(0,HEIGHT_WINDOW-99), NewSize(WIDTH_WINDOW, 100), (char*)"./assets/ui/bottom.png");
+    //GameObject* background = NewGameObject(NewPoint(0, 0), NewSize(640, 380), "./assets/map/water.png");
 
     boolean done = false;   
     while (!done) {
@@ -105,17 +95,20 @@ int main() {
             SDL_SetWindowTitle(window, title);
         }
 
+        // todo: testare questo ciclo nel movement
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 done = true;
                 break;
             }
-            else Movement(renderer, &event, inputSystem, player, &win, &delta_time, bullets);
+            else Movement(&event, inputSystem, player, &delta_time, bullets);
         }
+        // end todo
         
         // BACKGROUND
-        //RenderingTexture_(renderer, background, NewPoint(0,0));
-        RenderGameObject(renderer, background);
+        //RenderGameObject(renderer, background);
+        RenderGameObjectList(renderer, Water, true, delta_time);
+        RenderGameObjectList(renderer, Islands, false, delta_time);
 
         RenderingBullets(renderer, bullets, delta_time);
         
@@ -146,7 +139,7 @@ int main() {
     DestroyGameObject(life2);
     DestroyGameObject(life3);
     DestroyGameObject(ui_bottom);
-    DestroyGameObject(background);
+    //DestroyGameObject(background);
 
     DestroyList(bullets);
     DestroyCharacter(player);

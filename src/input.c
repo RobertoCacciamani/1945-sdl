@@ -32,62 +32,75 @@ void DestroyInputSystem(InputSystem* input_){
     free(input_);
 }
 
-void Movement(SDL_Renderer* renderer, SDL_Event* event, InputSystem* inputSys, Character* c, Size* window, double* delta_time, List* bullets){
+void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* delta_time, List* bullets){
     if(inputSys->IsActive){
         if (event->type == SDL_KEYDOWN)
         {
             if(event->key.keysym.scancode == inputSys->up){  // up
-                if (c->Go->position.y > 0)
+                if (c->Go->position->y > 0)
                 {
-                    c->Go->position.y += -1 * c->Speed * (*delta_time);
+                    c->Go->position->y += -1 * c->Speed * (*delta_time);
                     //printf("Movement called: up\n");
+                }
+                else{
+                    c->Go->position->y = 0;
                 }
             }
             if(event->key.keysym.scancode == inputSys->left){  // left
-                if (c->Go->position.x > 0)
+                if (c->Go->position->x > 0)
                 {
-                    c->Go->position.x += -1 * c->Speed * (*delta_time);
+                    c->Go->position->x += -1 * c->Speed * (*delta_time);
                     //printf("Movement called: left\n");
+                }
+                else{
+                    c->Go->position->x = 0;
                 }
             }
             if(event->key.keysym.scancode == inputSys->down){  // down
-                if (c->Go->position.y < (window->Height - 95) - c->Go->texture_size.Height)
+                if (c->Go->position->y < (HEIGHT_WINDOW - 95) - c->Go->texture_size->Height)
                 {
-                    c->Go->position.y += 1 * c->Speed * (*delta_time);
+                    c->Go->position->y += 1 * c->Speed * (*delta_time);
                     //printf("Movement called: down\n");
+                }
+                else{
+                    c->Go->position->y = (HEIGHT_WINDOW - 95) - c->Go->texture_size->Height;
                 }
             }
             if(event->key.keysym.scancode == inputSys->right){  // right
-                if (c->Go->position.x < window->Width - c->Go->texture_size.Width)
+                if (c->Go->position->x < WIDTH_WINDOW - c->Go->texture_size->Width)
                 {
-                    c->Go->position.x += 1 * c->Speed * (*delta_time);
+                    c->Go->position->x += 1 * c->Speed * (*delta_time);
                     //printf("Movement called: right\n");
+                }
+                else{
+                    c->Go->position->x = WIDTH_WINDOW - c->Go->texture_size->Width;
                 }
             }
             if(event->key.keysym.scancode == inputSys->shoot){  // shoot
-                shoot(renderer, c, window, delta_time, bullets);
+                shoot(c, bullets);
             }
         }
     }
 }
 
-void shoot (SDL_Renderer* renderer, Character* c, Size* window, double* deltatime, List* bullets){
-    if (c->Go->position.y > 0)
+void shoot (Character* c, List* bullets){
+    if (c->Go->position->y > 0)
     {
         int count = 0;
         int index = 0;
-        //int active = 0;
         Node* each = bullets->__head;
+        Bullet* bullet_app;
         while (each)
         {
             Node* next = each->next;
             if (((Bullet*)each->data)->Go->IsActive == false)
             {
-                ((Bullet*)each->data)->Go->IsActive = true;
-                ((Bullet*)each->data)->Go->position.x = c->Go->position.x + (c->Go->texture_size.Width * 0.5f) - (((Bullet*)each->data)->Go->texture_size.Width * 0.5f);
-                ((Bullet*)each->data)->Go->position.y = c->Go->position.y + ((Bullet*)each->data)->Go->texture_size.Height;
+                bullet_app = ((Bullet*)each->data); 
+                bullet_app->Go->IsActive = true;
+                bullet_app->Go->position->x = c->Go->position->x + (c->Go->texture_size->Width * 0.5f) - (bullet_app->Go->texture_size->Width * 0.5f);
+                bullet_app->Go->position->y = c->Go->position->y + bullet_app->Go->texture_size->Height;
                 index = count;
-                printf("count: %d\nactive: %d\n", index, (int)((Bullet*)each->data)->Go->IsActive);
+                //printf("count: %d\nactive: %d\n", index, (int)((Bullet*)each->data)->Go->IsActive);
                 break;
             }
             count++;

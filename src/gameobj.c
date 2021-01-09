@@ -1,7 +1,7 @@
 #include "gameobj.h"
 #include "bullet.h"
 
-GameObject* NewGameObject(Point pos, Size texture_size, char* texture_path){
+GameObject* NewGameObject(Point* pos, Size* texture_size, char* texture_path){
     GameObject* go = (GameObject*)calloc(1, sizeof(GameObject));
     go->position = pos;
     go->texture_path = texture_path;
@@ -13,6 +13,8 @@ GameObject* NewGameObject(Point pos, Size texture_size, char* texture_path){
 void DestroyGameObject(GameObject* go){
     if (go)
     {
+        DestroyPoint(go->position);
+        DestroySize(go->texture_size);
         free(go);
     }
 }
@@ -36,15 +38,70 @@ void GenericAddElemList(List* l, int n, char* elem, int type){
     else if (!strcmp("island", elem)){
         for (int i = 0; i < n; i++)
         {
-            AddElemList(l, NewBullet((BulletType)type));
+            AddElemList(l, NewIsland((IslandsType)type));
+        }
+    }
+    else if (!strcmp("background", elem)){
+        for (int i = 0; i < n; i++)
+        {
+            AddElemList(l, NewGameObject(NewPoint(0, 540-HEIGHT_WINDOW*3), NewSize(WIDTH_WINDOW, HEIGHT_WINDOW*3), (char*)"./assets/map/water.png"));
         }
     }
 }
 
-// void elemInList(List* l, int n){//, void* (struct_ptr), void* (function_ptr)()){
-//     for (int i = 0; i < n; i++)
-//     {
-//         Bullet bullet = NewBullet(playerBullet);
-//         AddElemList(l, &bullet);
-//     }
-// }
+GameObject* NewIsland(IslandsType it){
+    GameObject* go;
+    if(it == Normal)
+    {
+        Size* s = NewSize(70,80);
+        go = NewGameObject(RandomPoint(s), s, (char*)"./assets/map/island1.png");
+    }
+    else if(it == Vulcan)
+    {
+        Size* s = NewSize(80,80);
+        go = NewGameObject(RandomPoint(s), s, (char*)"./assets/map/island2.png");
+    }
+    else if(it == Sand)
+    {
+        Size* s = NewSize(70,90);
+        go = NewGameObject(RandomPoint(s), s, (char*)"./assets/map/island3.png");
+    }
+    go->IsActive = true;
+    return go;
+}
+
+void RenderGameObjectList(SDL_Renderer* renderer, List* goList, boolean bg, float deltaTime)
+{
+    int speed = 40;
+    int count = 0;
+    Node* each = goList->__head;
+    GameObject* free_GO;
+    while (each)
+    {
+        Node* next = each->next;
+        if(((GameObject*)each->data)->IsActive == true){
+            free_GO = (GameObject*)each->data;
+            free_GO->position->y += 1 * speed * deltaTime;
+            RenderActiveGameObject(renderer, free_GO, bg);
+        }
+        count++;
+        each = next;
+    }
+}
+
+void RenderActiveGameObject(SDL_Renderer* renderer, GameObject* go, boolean bg)
+{
+    if (!bg && go->position->y > (HEIGHT_WINDOW - 100) + go->texture_size->Height)
+    {
+        go->position = RandomPoint(go->texture_size);
+        //printf("not bg but normal go\n");
+    }
+    else if (bg && go->position->y > - 10){
+        go->position->y = 540-go->texture_size->Height;
+        //printf("bg replaced\n");
+    }
+    else{
+        RenderGameObject(renderer, go);
+        //printf("render go\n");
+    }
+}

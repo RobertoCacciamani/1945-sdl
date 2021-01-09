@@ -3,16 +3,20 @@
 
 #include "gameobj.h"
 
+
 typedef struct
 {
     int Hp;
     float Speed;
     GameObject* Go;
+    Animator* Animator_;
 } Character;
 
-Character* NewCharacter(int hp, float speed, char* path, Point p, Size s);
-void RenderCharacter(SDL_Renderer* render, Character* c);
+Character* NewCharacter(int, float, char*, Point*, Size*);
+void RenderCharacter(SDL_Renderer*, Character*);
 
-void DestroyCharacter(Character* c);
+void AddAnimation(Character*, char*, char*, SDL_Rect*, int);
+
+void DestroyCharacter(Character*);
 
 #endif // CHARACTER_H
