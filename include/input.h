@@ -21,7 +21,7 @@ void DestroyInputSystem(InputSystem*);
 void init_buttons(InputSystem*, char*);
 
 void Movement(SDL_Event*, InputSystem*, Character*, double, List*);
-void UpdateInputSystem(SDL_Event*, InputSystem*, Character*, double, List*);
+boolean UpdateInputSystem(SDL_Event*, InputSystem*, Character*, double, List*);
 
 void shoot (Character*, List*);
 

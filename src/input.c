@@ -7,7 +7,7 @@ void init_buttons(InputSystem* inputsys, char* system_movement){
         inputsys->up = SDL_SCANCODE_W;
         inputsys->left = SDL_SCANCODE_A;
         inputsys->down = SDL_SCANCODE_S;
-        inputsys->right = SDL_SCANCODE_D;
+            inputsys->right = SDL_SCANCODE_D;
         inputsys->shoot = SDL_SCANCODE_SPACE;
     }
     else if (!strcmp(system_movement, "arrow"))
@@ -32,8 +32,15 @@ void DestroyInputSystem(InputSystem* input_){
     free(input_);
 }
 
-void UpdateInputSystem(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
-    Movement(event, inputSys, c, delta_time, bullets);
+boolean UpdateInputSystem(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
+    while (SDL_PollEvent(event)){
+        if (event->type == SDL_QUIT) {
+                free(event);
+                return true;
+            }
+        Movement(event, inputSys, c, delta_time, bullets);
+    }
+    return false;
 }
 
 void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
@@ -44,7 +51,6 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delt
                 if (c->Go->position->y > 0)
                 {
                     c->Go->position->y += -1 * c->Speed * delta_time;
-                    //printf("Movement called: up\n");
                 }
                 else{
                     c->Go->position->y = 0;
@@ -54,7 +60,6 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delt
                 if (c->Go->position->x > 0)
                 {
                     c->Go->position->x += -1 * c->Speed * delta_time;
-                    //printf("Movement called: left\n");
                 }
                 else{
                     c->Go->position->x = 0;
@@ -64,7 +69,6 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delt
                 if (c->Go->position->y < (HEIGHT_WINDOW - 95) - c->Go->texture_size->Height)
                 {
                     c->Go->position->y += 1 * c->Speed * delta_time;
-                    //printf("Movement called: down\n");
                 }
                 else{
                     c->Go->position->y = (HEIGHT_WINDOW - 95) - c->Go->texture_size->Height;
@@ -74,7 +78,6 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delt
                 if (c->Go->position->x < WIDTH_WINDOW - c->Go->texture_size->Width)
                 {
                     c->Go->position->x += 1 * c->Speed * delta_time;
-                    //printf("Movement called: right\n");
                 }
                 else{
                     c->Go->position->x = WIDTH_WINDOW - c->Go->texture_size->Width;

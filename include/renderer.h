@@ -33,8 +33,8 @@ Animation* NewAnimation(char*, char*, SDL_Rect*, int, double);
 void DestroyListAnimation(List*);
 void DestroyAnimation(Animation*);
 
-void RenderingThisAnimation(SDL_Renderer*, Animator*, char*, Point*, double);
-void RenderingListAnimation(SDL_Renderer*, Animation*, SDL_Rect*, double);
+boolean RenderingThisAnimation(SDL_Renderer*, Animator*, char*, Point*, double);
+boolean RenderingListAnimation(SDL_Renderer*, Animation*, SDL_Rect*, double);
 void RenderingAnimation(SDL_Renderer*, char*, SDL_Rect*, SDL_Rect*);
 
 // window

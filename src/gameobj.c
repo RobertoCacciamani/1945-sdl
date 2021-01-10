@@ -26,8 +26,10 @@ void RenderGameObject(SDL_Renderer* render, GameObject* go){
         printf("texture '%s' is null", go->texture_path);
     }
     else{
-
-        RenderingTexture(render, texture, go->position, go->texture_size);
+        if (go->IsActive)
+        {
+            RenderingTexture(render, texture, go->position, go->texture_size);
+        }
     }
     SDL_DestroyTexture(texture);
     //SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "render_go: %f, %f", go->position.x, go->position.y);

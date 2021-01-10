@@ -8,6 +8,7 @@ typedef struct
 {
     double Hp;
     float Speed;
+    List* bullets;
     GameObject* Go;
     Animator* Animator_;
 } Character;

@@ -70,8 +70,9 @@ void DestroyAnimation(Animation* anim){
     free(anim);
 }
 
-void RenderingThisAnimation(SDL_Renderer* r, Animator* anim, char* animation_name, Point* p, double deltatime){
+boolean RenderingThisAnimation(SDL_Renderer* r, Animator* anim, char* animation_name, Point* p, double deltatime){
     int count = 0;
+    boolean finished = false;
     Node* each = anim->Animations->__head;
     Animation* anim_app;
     while (each)
@@ -80,24 +81,41 @@ void RenderingThisAnimation(SDL_Renderer* r, Animator* anim, char* animation_nam
         if(!strcmp(((Animation*)each->data)->Name, animation_name)){
             //printf("\nanimation_name: %s\n", animation_name);
             anim_app = ((Animation*)each->data);
-            RenderingListAnimation(r, anim_app, NewRect(p,anim_app->FrameSize), deltatime);
+            finished = RenderingListAnimation(r, anim_app, NewRect(p,anim_app->FrameSize), deltatime);
             break;
         }
         count++;
         each = next;
     }
+    return finished;
 }
 
-void RenderingListAnimation(SDL_Renderer* r, Animation* anim, SDL_Rect* dst, double deltatime){
+boolean RenderingListAnimation(SDL_Renderer* r, Animation* anim, SDL_Rect* dst, double deltatime){
     int count = 0;
     Node* each = anim->list->__head;
     boolean first = true;
+    boolean finished = false;
     SDL_Rect* last;
     while (each)
     {
         Node* next = each->next;
         if(count == anim->currFrame){
             //printf("animation_frame: %d\n", anim->currFrame);
+            if (anim->TimeFrame > 0)
+            {
+                anim->TimeFrame -= deltatime;
+                //printf("\ndeltatime: %f \nframe: %d \ndelay_frame: %f\n", deltatime, anim->currFrame, anim->TimeFrame);
+            }
+            else{
+                last = (SDL_Rect*)each->data;
+                if (anim->currFrame == (anim->TotFrames - 1))
+                {
+                    finished = true;
+                }
+                anim->currFrame = (anim->currFrame < (anim->TotFrames - 1)) ? anim->currFrame + 1 : 0;
+                anim->TimeFrame = anim->DelayFrame;
+                //printf("\nsrc changed\ncurr_frame: %d \ndelay restart %f\n", anim->currFrame, anim->TimeFrame);
+            }
             if (first)
             {
                 last = (SDL_Rect*)each->data;
@@ -107,21 +125,11 @@ void RenderingListAnimation(SDL_Renderer* r, Animation* anim, SDL_Rect* dst, dou
             else{
                 RenderingAnimation(r,anim->texture_path,last,dst);
             }
-            if (anim->TimeFrame > 0)
-            {
-                anim->TimeFrame -= deltatime;
-                //printf("\ndeltatime: %f \nframe: %d \ndelay_frame: %f\n", deltatime, anim->currFrame, anim->TimeFrame);
-            }
-            else{
-                last = (SDL_Rect*)each->data;
-                anim->currFrame = (anim->currFrame < (anim->TotFrames - 1)) ? anim->currFrame + 1 : 0;
-                anim->TimeFrame = anim->DelayFrame;
-                //printf("\nsrc changed\ncurr_frame: %d \ndelay restart %f\n", anim->currFrame, anim->TimeFrame);
-            }
         }
         count++;
         each = next;
     }
+    return finished;
 }
 
 void RenderingAnimation(SDL_Renderer* r, char* t_p, SDL_Rect* src, SDL_Rect* dst){
