@@ -7,6 +7,7 @@
 #include <gameobj.h>
 #include <input.h>
 #include <bullet.h>
+#include "player.h"
 
 
 int main() {
@@ -48,17 +49,17 @@ int main() {
     //float time_counter = 0.f;
     
     // GameObject player;
-    
     // NewGameObject(&player, NewPoint(10,10), NewSize(50,50), "./assets/ui/life.png");
 
-    Character* player = NewCharacter(100, 15000, (char*)"./assets/player/myplane_strip3.png", NewPoint(290,180), NewSize(65,65));
-    AddAnimation(player, "main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Go->position->x,0), player->Go->texture_size), 3);
+    // Character* player = NewCharacter(100, 15000, (char*)"./assets/player/myplane_strip3.png", NewPoint(290,180), NewSize(65,65));
+    // AddAnimation(player, (char*)"main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Go->position->x,0), player->Go->texture_size), 3, 0.03f);
+    // AddAnimation(player, (char*)"explosion", (char*)"./assets/player/explosion2_strip7.png", NewRect(NewPoint(player->Go->position->x,0), player->Go->texture_size), 7, 0.1f);
 
-    // Player player;
-    // NewPlayer(&player, "", 100, 20000, "./assets/ui/life.png", NewPoint(20,20), NewSize(50,50));
-
+    Player* player = NewPlayer(NewPoint(290,180), NewSize(65,65),100, 15000, (char*)"./assets/player/myplane_strip3.png");
+    AddAnimation(player->Character_, (char*)"main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 3, 0.03f);
+    AddAnimation(player->Character_, (char*)"explosion", (char*)"./assets/player/explosion2_strip7.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 7, 0.1f);
+    
     InputSystem* inputSystem = NewInputSystem((char*)"wasd");
-
 
     List* bullets = NewList();
     GenericAddElemList(bullets, 10, (char*)"bullet", playerBullet);
@@ -71,12 +72,7 @@ int main() {
     List* Water = NewList();
     GenericAddElemList(Water, 1, (char*)"background", 0);
 
-    GameObject* life1 = NewGameObject(NewPoint(100,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
-    GameObject* life2 = NewGameObject(NewPoint(55,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
-    GameObject* life3 = NewGameObject(NewPoint(10,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
-
     GameObject* ui_bottom = NewGameObject(NewPoint(0,HEIGHT_WINDOW-99), NewSize(WIDTH_WINDOW, 100), (char*)"./assets/ui/bottom.png");
-    //GameObject* background = NewGameObject(NewPoint(0, 0), NewSize(640, 380), "./assets/map/water.png");
 
     boolean done = false;   
     while (!done) {
@@ -95,54 +91,48 @@ int main() {
             SDL_SetWindowTitle(window, title);
         }
 
-        // todo: testare questo ciclo nel movement
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 done = true;
                 break;
             }
-            else Movement(&event, inputSystem, player, &delta_time, bullets);
+            else UpdateInputSystem(&event, inputSystem, player->Character_, delta_time, bullets);
         }
-        // end todo
         
         // BACKGROUND
-        //RenderGameObject(renderer, background);
         RenderGameObjectList(renderer, Water, true, delta_time);
         RenderGameObjectList(renderer, Islands, false, delta_time);
 
-        RenderingBullets(renderer, bullets, delta_time);
+        UpdateBullets(renderer, bullets, delta_time);
         
-        RenderCharacter(renderer, player);
+        //UpdateCharacter(renderer, player, delta_time);
+        //RenderingThisAnimation(renderer, player->Character_->Animator_, (char*)"explosion", player->Character_->Go->position, delta_time);
 
         // UI BASE
         RenderGameObject(renderer, ui_bottom);
 
         // LIFES
-        RenderGameObject(renderer, life1);
-        RenderGameObject(renderer, life2);
-        RenderGameObject(renderer, life3);
-        
-        // Clear
-        //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        //SDL_RenderClear(renderer);
-        
+        UpdatePlayer(renderer, player, delta_time);
+        // RenderGameObject(renderer, life1);
+        // RenderGameObject(renderer, life2);
+        // RenderGameObject(renderer, life3);
+
         // Blit
-        //SDL_UpperBlit(&background->Surface_, , window, win);
-        //SDL_UpdateWindowSurface(window);
         SDL_RenderPresent(renderer);
     }
 
     //Clean Up
     CloseWindow(renderer, window);
 
-    DestroyGameObject(life1);
-    DestroyGameObject(life2);
-    DestroyGameObject(life3);
+    // DestroyGameObject(life1);
+    // DestroyGameObject(life2);
+    // DestroyGameObject(life3);
     DestroyGameObject(ui_bottom);
     //DestroyGameObject(background);
 
     DestroyList(bullets);
-    DestroyCharacter(player);
+    DestroyPlayer(player);
+    //DestroyCharacter(player);
     DestroyInputSystem(inputSystem);
 
     return 0;

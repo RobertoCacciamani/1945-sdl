@@ -31,7 +31,7 @@ void DestroyBullet(Bullet* b){
     free(b);
 }
 
-void RenderingBullets(SDL_Renderer* renderer, List* bullets, float delta_time){
+void UpdateBullets(SDL_Renderer* renderer, List* bullets, double delta_time){
     int count = 0;
     Node* each = bullets->__head;
     Bullet* bullet_free;

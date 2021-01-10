@@ -16,7 +16,7 @@ typedef struct {
 } List;
 
 List* NewList();
-void DestroyList(List* list);
-void AddElemList(List* list, void* elem);
+void DestroyList(List*);
+void AddElemList(List*, void*);
 
 #endif /* LIST_H */

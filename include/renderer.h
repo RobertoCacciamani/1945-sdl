@@ -14,6 +14,8 @@ typedef struct
     int TotFrames;
     int currFrame;
     char* texture_path;
+    double TimeFrame;
+    double DelayFrame;
     Size* FrameSize;
     List* list;
 } Animation;
@@ -27,12 +29,12 @@ void DestroyRect(SDL_Rect*);
 // animation
 Animator* NewAnimator();
 void DestroyAnimator(Animator*);
-Animation* NewAnimation(char*, char*, SDL_Rect*, int);
+Animation* NewAnimation(char*, char*, SDL_Rect*, int, double);
 void DestroyListAnimation(List*);
 void DestroyAnimation(Animation*);
 
-void RenderingThisAnimation(SDL_Renderer*, Animator*, char*, Point*);
-void RenderingListAnimation(SDL_Renderer*, Animation*, SDL_Rect*);
+void RenderingThisAnimation(SDL_Renderer*, Animator*, char*, Point*, double);
+void RenderingListAnimation(SDL_Renderer*, Animation*, SDL_Rect*, double);
 void RenderingAnimation(SDL_Renderer*, char*, SDL_Rect*, SDL_Rect*);
 
 // window

@@ -1,9 +1,5 @@
 #include <character.h>
 
-// #define BULLET_SINGLE "path_single"
-// #define BULLET_DOUBLE "path_double"
-// #define BULLET_ENEMY "path_enemy"
-
 Character* NewCharacter(int hp, float speed, char* path, Point* p, Size* s){
     Character* c = (Character*)calloc(1, sizeof(Character));
     c->Hp = hp;
@@ -13,14 +9,14 @@ Character* NewCharacter(int hp, float speed, char* path, Point* p, Size* s){
     return c;
 }
 
-void AddAnimation(Character* c, char* animation_name, char* texture_name, SDL_Rect* rect, int frames){
-    Animation* anim = NewAnimation(animation_name, texture_name, rect, frames);
-    AddElemList(c->Animator_->Animations,  anim);
+void AddAnimation(Character* c, char* animation_name, char* texture_name, SDL_Rect* rect, int frames, double timeFrame){
+    // Animation* anim = NewAnimation(animation_name, texture_name, rect, frames);
+    AddElemList(c->Animator_->Animations, NewAnimation(animation_name, texture_name, rect, frames, timeFrame));
 }
 
-void RenderCharacter(SDL_Renderer* render, Character* c){
+void UpdateCharacter(SDL_Renderer* render, Character* c, double dt){
     //RenderGameObject(render, c->Go);
-    RenderingThisAnimation(render, c->Animator_, "main", c->Go->position);
+    RenderingThisAnimation(render, c->Animator_, (char*)"main", c->Go->position, dt);
 }
 
 void DestroyCharacter(Character* c){

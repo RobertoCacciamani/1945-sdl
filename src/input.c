@@ -32,14 +32,18 @@ void DestroyInputSystem(InputSystem* input_){
     free(input_);
 }
 
-void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* delta_time, List* bullets){
+void UpdateInputSystem(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
+    Movement(event, inputSys, c, delta_time, bullets);
+}
+
+void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
     if(inputSys->IsActive){
         if (event->type == SDL_KEYDOWN)
         {
             if(event->key.keysym.scancode == inputSys->up){  // up
                 if (c->Go->position->y > 0)
                 {
-                    c->Go->position->y += -1 * c->Speed * (*delta_time);
+                    c->Go->position->y += -1 * c->Speed * delta_time;
                     //printf("Movement called: up\n");
                 }
                 else{
@@ -49,7 +53,7 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* del
             if(event->key.keysym.scancode == inputSys->left){  // left
                 if (c->Go->position->x > 0)
                 {
-                    c->Go->position->x += -1 * c->Speed * (*delta_time);
+                    c->Go->position->x += -1 * c->Speed * delta_time;
                     //printf("Movement called: left\n");
                 }
                 else{
@@ -59,7 +63,7 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* del
             if(event->key.keysym.scancode == inputSys->down){  // down
                 if (c->Go->position->y < (HEIGHT_WINDOW - 95) - c->Go->texture_size->Height)
                 {
-                    c->Go->position->y += 1 * c->Speed * (*delta_time);
+                    c->Go->position->y += 1 * c->Speed * delta_time;
                     //printf("Movement called: down\n");
                 }
                 else{
@@ -69,7 +73,7 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double* del
             if(event->key.keysym.scancode == inputSys->right){  // right
                 if (c->Go->position->x < WIDTH_WINDOW - c->Go->texture_size->Width)
                 {
-                    c->Go->position->x += 1 * c->Speed * (*delta_time);
+                    c->Go->position->x += 1 * c->Speed * delta_time;
                     //printf("Movement called: right\n");
                 }
                 else{

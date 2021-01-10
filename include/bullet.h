@@ -16,11 +16,11 @@ typedef struct
 enum BulletType_ {normal = 0, playerBullet, enemyBullet};
 typedef enum BulletType_ BulletType; 
 
-Bullet* NewBullet(BulletType bulletType);
-void RenderingBullet(SDL_Renderer* renderer, Bullet* b);
-void RenderingBullets(SDL_Renderer* renderer, List* bullets, float delta_time);
+Bullet* NewBullet(BulletType);
+void RenderingBullet(SDL_Renderer*, Bullet*);
+void UpdateBullets(SDL_Renderer*, List*, double);
 
-void DestroyBullet(Bullet* b);
+void DestroyBullet(Bullet*);
 
 
 #endif /*BULLET_H*/

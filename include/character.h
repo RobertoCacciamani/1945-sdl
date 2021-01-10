@@ -6,16 +6,16 @@
 
 typedef struct
 {
-    int Hp;
+    double Hp;
     float Speed;
     GameObject* Go;
     Animator* Animator_;
 } Character;
 
 Character* NewCharacter(int, float, char*, Point*, Size*);
-void RenderCharacter(SDL_Renderer*, Character*);
+void UpdateCharacter(SDL_Renderer*, Character*, double);
 
-void AddAnimation(Character*, char*, char*, SDL_Rect*, int);
+void AddAnimation(Character*, char*, char*, SDL_Rect*, int, double);
 
 void DestroyCharacter(Character*);
 
