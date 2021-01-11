@@ -4,17 +4,20 @@
 #include "character.h"
 #include "input.h"
 #include "ui.h"
+#include "ttf.h"
 
 typedef struct
 {
     Character* Character_;
     int Lives;
+    int score;
     boolean IsAlive;
     boolean IsDead;
     GameObject* life1;
     GameObject* life2;
     GameObject* life3;
     InputSystem* Input;
+    Font* font;
 } Player;
 
 

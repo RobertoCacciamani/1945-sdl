@@ -54,7 +54,7 @@ void GenericAddElemList(List* l, int n, char* elem, int type){
     else if (!strcmp("background", elem)){
         for (int i = 0; i < n; i++)
         {
-            AddElemList(l, NewGameObject(NewPoint(0, 540-HEIGHT_WINDOW*3), NewSize(WIDTH_WINDOW, HEIGHT_WINDOW*3), (char*)"./assets/map/water.png"));
+            AddElemList(l, NewGameObject(NewPoint(0, 540-HEIGHT_WINDOW), NewSize(WIDTH_WINDOW, HEIGHT_WINDOW*2), (char*)"./assets/map/water2.png"));
         }
     }
 }
@@ -97,6 +97,8 @@ void RenderGameObjectList(SDL_Renderer* renderer, List* goList, boolean bg, floa
         count++;
         each = next;
     }
+    each = NULL;
+    free_GO = NULL;
 }
 
 void RenderActiveGameObject(SDL_Renderer* renderer, GameObject* go, boolean bg)

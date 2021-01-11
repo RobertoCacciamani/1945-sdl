@@ -14,13 +14,21 @@ typedef struct
 PhysicsManager* NewPhysicsManager(Player*, EnemyManager*);
 void DestroyPhysicsManager(PhysicsManager*);
 
+// PRIMARY
 void CheckCollision(PhysicsManager* pm);
-void CheckCollisionPlayerEnemy(PhysicsManager* pm);
 Point* GetMaxPointGameObject(GameObject* go);
 boolean CheckCollisionPoint(GameObject* go1, GameObject* go2);
 boolean PointInRect(Point* p, GameObject* go);
 
+// ENEMY <=> PLAYER
+void CheckCollisionPlayerEnemy(PhysicsManager* pm);
+
+// PLAYER_BULLET -> ENEMY
 void CheckCollisionPlayerBullets(PhysicsManager* pm);
 void CheckCollisionPlayerBulletEnemy(PhysicsManager* pm, Bullet* bullet);
+
+// ENEMY_BULLET -> PLAYER
+void CheckCollisionEnemyBullets(PhysicsManager* pm);
+void CheckCollisionEnemyBulletsPlayer(Player* player, Enemy* enemy);
 
 #endif // PHYSICS_H

@@ -1,9 +1,11 @@
 #include "enemy.h"
 
-Enemy* NewEnemy(Size* s, char* texture){
+Enemy* NewEnemy(Size* s, char* texture, int score){
     Enemy* enemy = (Enemy*)calloc(1, sizeof(Enemy));
     enemy->Character_ = NewCharacter(50, 30, texture, NewPoint(0,0), s);
-    enemy->score = 5;
+    enemy->score = score;
+    //enemy->DelayShoot = 1;
+    enemy->TimeShoot = 1;
     enemy->IsAlive = true;
     enemy->IsDead = false;
     GenericAddElemList(enemy->Character_->bullets, 10, (char*)"bullet", enemyBullet);
@@ -16,13 +18,17 @@ Enemy* NewEnemy(Size* s, char* texture){
 
 void UpdateEnemy(SDL_Renderer* renderer, Enemy* enemy, double dt){
     //printf("enemy x: %f y: %f \n", enemy->Character_->Go->position->x, enemy->Character_->Go->position->y);
-    printf("enemy hp: %f\n", enemy->Character_->Hp);
+    //printf("enemy hp: %f\n", enemy->Character_->Hp);
+
+    UpdateBullets(renderer, enemy->Character_->bullets, dt);
+    ShootEnemy(enemy, dt);
+
     if(enemy->Character_->Hp > 0 && enemy->Character_->Go->position->y > 0){
         //enemy->Character_->Hp -= 0.03f;
     }
     else if (enemy->Character_->Hp <= 0 && !enemy->IsDead)
     {
-        printf("enemy morto!\n");
+        //printf("enemy morto!\n");
         enemy->IsAlive = false;
         enemy->Character_->Go->IsActive = false;
         if(RenderingThisAnimation(renderer, enemy->Character_->Animator_, "explosion", enemy->Character_->Go->position, dt)){
@@ -35,6 +41,15 @@ void UpdateEnemy(SDL_Renderer* renderer, Enemy* enemy, double dt){
     UpdateCharacter(renderer, enemy->Character_, dt);
 }
 
+void ShootEnemy(Enemy* enemy, double dt){
+    enemy->TimeShoot -= dt;
+    if (enemy->TimeShoot <= 0)
+    {
+        shoot(enemy->Character_, enemy->Character_->bullets);
+        enemy->TimeShoot = GetRandomInRange(2,7);
+    }
+}
+
 void RespawnEnemy(Enemy* enemy){
     if(enemy->Character_->Go->position->y >= HEIGHT_WINDOW - 90 || enemy->IsDead){
         enemy->Character_->Go->position->x = GetRandomInRange(100, WIDTH_WINDOW - (100 + enemy->Character_->Go->texture_size->Width));
@@ -43,7 +58,7 @@ void RespawnEnemy(Enemy* enemy){
         enemy->IsDead = false;
         enemy->Character_->Go->IsActive = true;
         enemy->Character_->Hp = 50;
-        printf("enemy rispawnato!\n");
+        //printf("enemy rispawnato!\n");
     }
 }
 
@@ -66,12 +81,13 @@ void DestroyEnemyManager(EnemyManager* enemymgr){
         DestroyEnemy(((Enemy*)each->data));
         each = next;
     }
+    each = NULL;
     DestroyList(enemymgr->enemys);
     free(enemymgr);
 }
 
-void AddEnemyManagerList(EnemyManager* enemymgr, Size* s, char* txt_path){
-    AddElemList(enemymgr->enemys, NewEnemy(s, txt_path));
+void AddEnemyManagerList(EnemyManager* enemymgr, Size* s, char* txt_path, int score){
+    AddElemList(enemymgr->enemys, NewEnemy(s, txt_path, score));
 }
 
 void UpdateEnemyManager(SDL_Renderer* renderer, EnemyManager* enemymgr, double dt){
@@ -83,6 +99,7 @@ void UpdateEnemyManager(SDL_Renderer* renderer, EnemyManager* enemymgr, double d
         UpdateEnemy(renderer, ((Enemy*)each->data), dt);
         each = next;
     }
+    each = NULL;
 }
 
 void AI(Enemy* enemy, double dt){

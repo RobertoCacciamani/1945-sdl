@@ -113,5 +113,7 @@ void shoot (Character* c, List* bullets){
             count++;
             each = next;
         }
+        each = NULL;
+        bullet_app = NULL;
     }
 }

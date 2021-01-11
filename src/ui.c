@@ -26,6 +26,7 @@ void UpdateInterface(SDL_Renderer* renderer, Interface* i, double dt){
         RenderingUI(renderer, (UI*)each->data);
         each = next;
     }
+    each = NULL;
 }
 
 void RenderingUI(SDL_Renderer* renderer, UI* ui){
@@ -42,6 +43,7 @@ void DestroyInterface(Interface* i){
         DestroyUI((UI*)each->data);
         each = next;
     }
+    free(each);
     DestroyList(i->UiList);
     free(i);
 }

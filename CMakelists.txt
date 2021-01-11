@@ -55,6 +55,7 @@ add_executable(SDL_1945
                         src/enemy.c
                         src/bullet.c
                         src/ui.c
+                        src/ttf.c
                         src/physics.c)
                         
 # link diretto sulla .lib

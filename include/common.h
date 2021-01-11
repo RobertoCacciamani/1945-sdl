@@ -1,9 +1,11 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define HEIGHT_WINDOW 480
 #define WIDTH_WINDOW 640
-#define RECTZERO NewRect(NewPoint(0,0), NewSize(0,0))
+#define HEIGHT_WINDOW 480
+#define POINT_ZERO NewPoint(0,0)
+#define SIZE_ZERO NewSize(0,0)
+#define RECT_ZERO NewRect(POINT_ZERO, SIZE_ZERO)
 
 #include "SDL.h"
 #include <SDL_mixer.h>

@@ -73,6 +73,7 @@ void DestroyListAnimation(List* animations){
         DestroyAnimation(((Animation*)each->data));
         each = next;
     }
+    each = NULL;
 }
 
 void DestroyAnimation(Animation* anim){
@@ -98,6 +99,8 @@ boolean RenderingThisAnimation(SDL_Renderer* r, Animator* anim, char* animation_
         count++;
         each = next;
     }
+    each = NULL;
+    anim_app = NULL;
     return finished;
 }
 
@@ -140,6 +143,8 @@ boolean RenderingListAnimation(SDL_Renderer* r, Animation* anim, SDL_Rect* dst, 
         count++;
         each = next;
     }
+    each = NULL;
+    last = NULL;
     return finished;
 }
 
@@ -159,6 +164,7 @@ void RenderingAnimation(SDL_Renderer* r, char* t_p, SDL_Rect* src, SDL_Rect* dst
 
 // windows
 void CloseWindow(SDL_Renderer* r, SDL_Window* win){
+    TTF_Quit();
     SDL_DestroyRenderer(r);
     SDL_DestroyWindow(win);
     SDL_Quit();

@@ -14,6 +14,7 @@ void DestroyPhysicsManager(PhysicsManager* pm){
 void CheckCollision(PhysicsManager* pm){
     CheckCollisionPlayerEnemy(pm);
     CheckCollisionPlayerBullets(pm);
+    CheckCollisionEnemyBullets(pm);
 }
 
 void CheckCollisionPlayerEnemy(PhysicsManager* pm){
@@ -27,16 +28,61 @@ void CheckCollisionPlayerEnemy(PhysicsManager* pm){
         if (player->IsAlive && enemy->IsAlive)
         {
             if(CheckCollisionPoint(player->Character_->Go, enemy->Character_->Go)){
-            //if(SDL_HasIntersection(player->Character_->Go->MyRect, enemy->Character_->Go->MyRect)){
+                printf("collisione player_to_enemy\n");
                 int player_hp = player->Character_->Hp;
                 player->Character_->Hp -= enemy->Character_->Hp;
                 enemy->Character_->Hp -= player_hp;
+                player->score += enemy->score;
                 break;
             }
         }
         each = next;
     }
+    enemy = NULL;
+    each = NULL;
+    player = NULL;
 }
+
+void CheckCollisionEnemyBullets(PhysicsManager* pm){
+    Node* each = pm->enemymgr->enemys->__head;
+    Enemy* enemy;
+    while (each)
+    {
+        Node* next = each->next;
+        enemy = (Enemy*)each->data;
+        if (enemy->IsAlive && !enemy->IsDead && enemy->Character_->Go->position->y > 0)
+        {
+            CheckCollisionEnemyBulletsPlayer(pm->player, enemy);
+            //CheckCollisionPlayerBulletEnemy(pm, bullet);
+        }
+        each = next;
+    }
+    enemy = NULL;
+    each = NULL;
+}
+
+void CheckCollisionEnemyBulletsPlayer(Player* player, Enemy* enemy){
+    Node* each = enemy->Character_->bullets->__head;
+    Bullet* bullet;
+    while (each)
+    {
+        Node* next = each->next;
+        bullet = (Bullet*)each->data;
+        if (bullet->Go->IsActive)
+        {
+            if(CheckCollisionPoint(player->Character_->Go, bullet->Go)){
+                printf("collision enemybullet_player\n");
+                bullet->Go->IsActive = false;
+                player->Character_->Hp -= bullet->Damage;
+                break;
+            }
+        }
+        each = next;
+    }
+    bullet = NULL;
+    each = NULL;
+}
+
 
 void CheckCollisionPlayerBullets(PhysicsManager* pm){
     Node* each = pm->player->Character_->bullets->__head;
@@ -47,13 +93,12 @@ void CheckCollisionPlayerBullets(PhysicsManager* pm){
         bullet = (Bullet*)each->data;
         if (bullet->Go->IsActive == true)
         {
-            // printf("bullet x: %f y: %f \n", bullet->Go->position->x, bullet->Go->position->y);
-            //if(SDL_HasIntersection(NewRect(), NewRect()))
-
             CheckCollisionPlayerBulletEnemy(pm, bullet);
         }
         each = next;
     }
+    bullet = NULL;
+    each = NULL;
 }
 
 void CheckCollisionPlayerBulletEnemy(PhysicsManager* pm, Bullet* bullet){
@@ -65,17 +110,21 @@ void CheckCollisionPlayerBulletEnemy(PhysicsManager* pm, Bullet* bullet){
         enemy = (Enemy*)each->data;
         if (enemy->IsAlive && !enemy->IsDead && enemy->Character_->Go->position->y > 0)
         {
-            //if(SDL_IntersectRect(bullet->Go->MyRect, enemy->Character_->Go->MyRect, RECTZERO)){
-            //if(SDL_HasIntersection(bullet->Go->MyRect, enemy->Character_->Go->MyRect)){
             if(CheckCollisionPoint(enemy->Character_->Go, bullet->Go)){
-                printf("collision bullet_enemy\n");
+                printf("collision playerbullet -> enemy\n");
                 bullet->Go->IsActive = false;
                 enemy->Character_->Hp -= bullet->Damage;
+                if (enemy->Character_->Hp <= 0)
+                {
+                    pm->player->score += enemy->score;
+                }
                 break;
             }
         }
         each = next;
     }
+    enemy = NULL;
+    each = NULL;
 }
 
 boolean CheckCollisionPoint(GameObject* player, GameObject* enemy){
@@ -85,10 +134,13 @@ boolean CheckCollisionPoint(GameObject* player, GameObject* enemy){
     // printf("enemy_max x: %f y: %f \n--------------\n\n", enemy_max->x, enemy_max->y);
     if (PointInRect(enemy_min, player) || PointInRect(enemy_max, player) || PointInRect(NewPoint(enemy_max->x, enemy_min->y), player) || PointInRect(NewPoint(enemy_min->x, enemy_max->y), player))
     {
-        printf("collisione player_to_enemy\n");
+        enemy_max = NULL;
+        enemy_min = NULL;
         return true;
     }
     else {
+        enemy_max = NULL;
+        enemy_min = NULL;
         return false;
     }
 }
@@ -102,13 +154,19 @@ boolean PointInRect(Point* p, GameObject* go){
     {
         if (p->x <= max->x && p->y <= max->y)
         {
+            max = NULL;
+            min = NULL;
             return true;
         }
         else{
+            max = NULL;
+            min = NULL;
             return false;
         }
     }
     else{
+        max = NULL;
+        min = NULL;
         return false;
     }
 }

@@ -12,8 +12,8 @@ Bullet* NewBullet(BulletType bulletType){
     else if (bulletType == enemyBullet)
     {
         bullet_->Damage = 20;
-        bullet_->Speed = -10;
-        bullet_->Go = NewGameObject(NewPoint(20,20), NewSize(10,10), (char*)"./assets/enemy/enemybullet1.png");
+        bullet_->Speed = -50;
+        bullet_->Go = NewGameObject(NewPoint(20,20), NewSize(10,10), (char*)"./assets/enemy/enemyBullet.png");
         bullet_->Go->IsActive = false;
     }
     else if (bulletType == normal)
@@ -47,12 +47,18 @@ void UpdateBullets(SDL_Renderer* renderer, List* bullets, double delta_time){
         count++;
         each = next;
     }
+    each = NULL;
+    bullet_free = NULL;
 }
 
 void RenderingBullet(SDL_Renderer* renderer, Bullet* b){
-    if (b->Go->position->y < 0)
+    if (b->Speed > 0 && b->Go->position->y < 0)
     {
         b->Go->IsActive = false; // only with list in config
+    }
+    if (b->Speed < 0 && b->Go->position->y > (HEIGHT_WINDOW - 100))
+    {
+        b->Go->IsActive = false;
     }
     else{
         // printf("rendering bullet\n");
