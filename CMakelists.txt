@@ -52,8 +52,10 @@ add_executable(SDL_1945
                         src/list.c 
                         src/input.c
                         src/player.c
+                        src/enemy.c
                         src/bullet.c
-                        src/ui.c)
+                        src/ui.c
+                        src/physics.c)
                         
 # link diretto sulla .lib
 target_link_libraries(SDL_1945 

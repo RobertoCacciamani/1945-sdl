@@ -18,7 +18,7 @@ UI* NewUI(Point* p, Size* s, char* texture_path){
     return ui;
 }
 
-void UpdateInterface(SDL_Renderer* renderer, Interface* i,Player* player, double dt){
+void UpdateInterface(SDL_Renderer* renderer, Interface* i, double dt){
     Node* each = i->UiList->__head;
     while (each)
     {
@@ -34,9 +34,20 @@ void RenderingUI(SDL_Renderer* renderer, UI* ui){
     SDL_DestroyTexture(texture);
 }
 
+void DestroyInterface(Interface* i){
+    Node* each = i->UiList->__head;
+    while (each)
+    {
+        Node* next = each->next;
+        DestroyUI((UI*)each->data);
+        each = next;
+    }
+    DestroyList(i->UiList);
+    free(i);
+}
 
-void UIDestroy(UI* ui){
-    if(ui != NULL){
+void DestroyUI(UI* ui){
+    if(ui){
         DestroyPoint(ui->position);
         DestroySize(ui->size);
         free(ui);

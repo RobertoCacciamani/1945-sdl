@@ -22,6 +22,7 @@ typedef struct
 
 // texture
 int RenderingTexture(SDL_Renderer*, SDL_Texture*, Point*, Size*);
+int RenderingPath(SDL_Renderer*, char*, Point*, Size*);
 SDL_Texture* NewTexture(SDL_Renderer*, char*);
 SDL_Rect* NewRect(Point*, Size*);
 void DestroyRect(SDL_Rect*);

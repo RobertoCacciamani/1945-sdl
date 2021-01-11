@@ -2,8 +2,8 @@
 #define PLAYER_H
 
 #include "character.h"
-#include "bullet.h"
 #include "input.h"
+#include "ui.h"
 
 typedef struct
 {
@@ -19,7 +19,6 @@ typedef struct
 
 
 Player* NewPlayer(Point*, Size*, InputSystem*, int, float, char*);
-void RenderPlayer(SDL_Renderer*, Player*, double);
 
 boolean UpdatePlayer(SDL_Renderer*, SDL_Event*, Player*, double);
 void DestroyPlayer(Player*);

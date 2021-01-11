@@ -1,10 +1,17 @@
 #include <renderer.h>
 
 // texture
-int RenderingTexture(SDL_Renderer* r, SDL_Texture* tex, Point* p, Size* s){
+int RenderingTexture(SDL_Renderer* renderer, SDL_Texture* tex, Point* p, Size* s){
     SDL_Rect* rect = NewRect(p,s);
-    int res =  SDL_RenderCopy(r, tex, NULL, rect);
+    int res =  SDL_RenderCopy(renderer, tex, NULL, rect);
     DestroyRect(rect);
+    return res;
+}
+
+int RenderingPath(SDL_Renderer* renderer, char* path, Point* p, Size* s){
+    SDL_Texture* t = NewTexture(renderer, path);
+    int res = RenderingTexture(renderer, t, p, s);
+    SDL_DestroyTexture(t);
     return res;
 }
 
@@ -14,10 +21,14 @@ SDL_Texture* NewTexture(SDL_Renderer* renderer, char* path_file){
 
 SDL_Rect* NewRect(Point* p, Size* s){
     SDL_Rect* rect_ = (SDL_Rect*)calloc(1, sizeof(SDL_Rect));
+    //printf("-------\nSize -> rect w: %f h: %f \n", s->Width, s->Height);
+    //printf("Pos -> rect x: %f y: %f \n", p->x, p->y);
     rect_->x = p->x;
     rect_->y = p->y; 
     rect_->w = s->Width; 
     rect_->h = s->Height;
+    // printf("\nSize -> rect w: %d h: %d \n", rect_->w, rect_->h);
+    // printf("Pos -> rect x: %d y: %d \n-------\n", rect_->x, rect_->y);
     return rect_;
 }
 
@@ -133,7 +144,7 @@ boolean RenderingListAnimation(SDL_Renderer* r, Animation* anim, SDL_Rect* dst, 
 }
 
 void RenderingAnimation(SDL_Renderer* r, char* t_p, SDL_Rect* src, SDL_Rect* dst){
-    //printf("SRC x: %d y: %d  \t w: %d h:%d\n",src->x,src->y,src->w,src->h);
+    // printf("SRC x: %d y: %d  \t w: %d h:%d\n",src->x,src->y,src->w,src->h);
     // printf("DST x: %d y: %d  \t w: %d h:%d\n",dst->x,dst->y,dst->w,dst->h);
     // printf("path: %s\n", t_p);
     SDL_Texture* t = NewTexture(r,t_p);

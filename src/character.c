@@ -16,10 +16,10 @@ void AddAnimation(Character* c, char* animation_name, char* texture_name, SDL_Re
 }
 
 void UpdateCharacter(SDL_Renderer* render, Character* c, double dt){
-    //RenderGameObject(render, c->Go);
     if (c->Go->IsActive)
     {
         RenderingThisAnimation(render, c->Animator_, (char*)"main", c->Go->position, dt);
+        //RenderGameObject(render, c->Go);
     }
     else{
         //printf("character morto\n");

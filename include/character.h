@@ -2,7 +2,7 @@
 #define CHARACTER_H
 
 #include "gameobj.h"
-
+#include "bullet.h"
 
 typedef struct
 {

@@ -9,7 +9,6 @@ Player* NewPlayer(Point* p, Size* s, InputSystem* input, int hp, float speed, ch
     player->life1 = NewGameObject(NewPoint(100,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
     player->life2 = NewGameObject(NewPoint(55,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
     player->life3 = NewGameObject(NewPoint(10,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
-    player->Character_->bullets = NewList();
     GenericAddElemList(player->Character_->bullets, 10, (char*)"bullet", playerBullet);
     player->Input = input;
     return player;
@@ -34,7 +33,7 @@ boolean UpdatePlayer(SDL_Renderer* renderer, SDL_Event* events, Player* player, 
     }
 
     if(player->Character_->Hp > 0){
-        player->Character_->Hp -= 0.05f;
+        //player->Character_->Hp -= 0.05f;
     }
     else if (player->Character_->Hp <= 0 && player->Lives > 0 && player->IsAlive)
     {
@@ -62,18 +61,10 @@ boolean UpdatePlayer(SDL_Renderer* renderer, SDL_Event* events, Player* player, 
         }
     }
     
-    //printf("update_player -> dt: %f\n", dt);
     UpdateCharacter(renderer, player->Character_, dt);
     
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
-    // SDL_RenderDrawLine(renderer,10,10,20,20);
+    RenderingPath(renderer, (char*)"./assets/ui/hp.png", NewPoint(12, HEIGHT_WINDOW -40), NewSize(126 * player->Character_->Hp / 100, 13));
 
-    // draw player HP
-    SDL_Texture* texture = NewTexture(renderer,(char*)"./assets/ui/hp.png");
-    RenderingTexture(renderer,texture, NewPoint(12, HEIGHT_WINDOW -40), NewSize(126 * player->Character_->Hp / 100, 13));
-    SDL_DestroyTexture(texture);
-
-    //SDL_RenderDrawRect(renderer, NewRect(NewPoint(12, HEIGHT_WINDOW -39), NewSize(126 * player->Character_->Hp / 100, 10)));
     return UpdateInputSystem(events, player->Input, player->Character_, dt, player->Character_->bullets);
 }
 

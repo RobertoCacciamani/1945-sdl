@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "renderer.h"
-#include "player.h"
 
 typedef struct 
 {
@@ -17,16 +16,15 @@ typedef struct
     Size*  size;
 } UI;
 
+// INTERFACE
 Interface* NewInterface();
-
 void AddUiList(Interface*, Point*, Size*, char*);
+void UpdateInterface(SDL_Renderer*, Interface*, double);
+void DestroyInterface(Interface* i);
 
+// UI
 UI* NewUI(Point*, Size*, char*);
-
-void UpdateInterface(SDL_Renderer*, Interface*, Player*, double);
-
 void RenderingUI(SDL_Renderer* renderer, UI* ui);
-
 void DestroyUI(UI* ui);
 
 #endif // UI_H

@@ -8,6 +8,9 @@
 #include <input.h>
 #include <bullet.h>
 #include "player.h"
+#include "enemy.h"
+#include "ui.h"
+#include "physics.h"
 
 
 int main() {
@@ -46,6 +49,14 @@ int main() {
     AddAnimation(player->Character_, (char*)"main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 3, 0.03f);
     AddAnimation(player->Character_, (char*)"explosion", (char*)"./assets/player/explosion2_strip7.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 7, 0.1f);
     
+    EnemyManager* enemymgr = NewEnemyManager();
+    AddEnemyManagerList(enemymgr, NewSize(32,32), (char*)"./assets/enemy/enemy1_strip3.png");
+    
+    PhysicsManager* physicsManager = NewPhysicsManager(player, enemymgr);
+
+    Interface* ui = NewInterface();
+    AddUiList(ui, NewPoint(0,HEIGHT_WINDOW-99), NewSize(WIDTH_WINDOW, 100), (char*)"./assets/ui/bottom.png");
+
     List* Islands = NewList();
     GenericAddElemList(Islands, 2, (char*)"island", Normal);
     GenericAddElemList(Islands, 2, (char*)"island", Vulcan);
@@ -54,12 +65,9 @@ int main() {
     List* Water = NewList();
     GenericAddElemList(Water, 1, (char*)"background", 0);
 
-    GameObject* ui_bottom = NewGameObject(NewPoint(0,HEIGHT_WINDOW-99), NewSize(WIDTH_WINDOW, 100), (char*)"./assets/ui/bottom.png");
-
     boolean done = false;
 
     SDL_Event* event = (SDL_Event*)calloc(1, sizeof(SDL_Event));
-    
     while (!done) {
         SDL_RenderClear(renderer);
 
@@ -80,12 +88,16 @@ int main() {
         RenderGameObjectList(renderer, Water, true, delta_time);
         RenderGameObjectList(renderer, Islands, false, delta_time);
 
-        // UI BASE
-        RenderGameObject(renderer, ui_bottom);
+        CheckCollision(physicsManager);
 
         // TEST
         //RenderingThisAnimation(renderer, player->Character_->Animator_, (char*)"explosion", player->Character_->Go->position, delta_time);
+        UpdateEnemyManager(renderer, enemymgr, delta_time);
         
+        // UI BASE
+        UpdateInterface(renderer, ui, delta_time);
+        //RenderGameObject(renderer, ui_bottom);
+
         // PLAYER (INPUT, BULLETS, LIFE MANAGER)
         done = UpdatePlayer(renderer, event, player, delta_time);
 
@@ -99,11 +111,12 @@ int main() {
     // DestroyGameObject(life1);
     // DestroyGameObject(life2);
     // DestroyGameObject(life3);
-    DestroyGameObject(ui_bottom);
+    //DestroyGameObject(ui_bottom);
     //DestroyGameObject(background);
 
     //DestroyList(bullets);
     DestroyPlayer(player);
+    DestroyInterface(ui);
     //DestroyCharacter(player);
     //DestroyInputSystem(inputSystem);
 

@@ -26,7 +26,7 @@ Point* RandomPoint(Size* s)
 {
     int posX = GetRandomInRange(0, WIDTH_WINDOW - s->Width - 1);
     int posY = -GetRandomInRange(s->Height, s->Height - 300);
-    //printf("random x: %d y: %d \n", posX, posY);
+    // printf("random x: %d y: %d \n", posX, posY);
 
     return NewPoint(posX, posY);
 }
