@@ -18,6 +18,7 @@ typedef struct
     GameObject* life3;
     InputSystem* Input;
     Font* font;
+    Mix_Chunk* explosion;
 } Player;
 
 

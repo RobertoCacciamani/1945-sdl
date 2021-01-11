@@ -32,6 +32,7 @@ typedef struct {
     float y;
 } Point;
 
+
 Size* NewSize(float, float);
 Point* NewPoint(float, float);
 

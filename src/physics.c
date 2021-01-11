@@ -28,7 +28,7 @@ void CheckCollisionPlayerEnemy(PhysicsManager* pm){
         if (player->IsAlive && enemy->IsAlive)
         {
             if(CheckCollisionPoint(player->Character_->Go, enemy->Character_->Go)){
-                printf("collisione player_to_enemy\n");
+                //printf("collisione player_to_enemy\n");
                 int player_hp = player->Character_->Hp;
                 player->Character_->Hp -= enemy->Character_->Hp;
                 enemy->Character_->Hp -= player_hp;
@@ -71,7 +71,7 @@ void CheckCollisionEnemyBulletsPlayer(Player* player, Enemy* enemy){
         if (bullet->Go->IsActive)
         {
             if(CheckCollisionPoint(player->Character_->Go, bullet->Go)){
-                printf("collision enemybullet_player\n");
+                //printf("collision enemybullet_player\n");
                 bullet->Go->IsActive = false;
                 player->Character_->Hp -= bullet->Damage;
                 break;
@@ -111,7 +111,7 @@ void CheckCollisionPlayerBulletEnemy(PhysicsManager* pm, Bullet* bullet){
         if (enemy->IsAlive && !enemy->IsDead && enemy->Character_->Go->position->y > 0)
         {
             if(CheckCollisionPoint(enemy->Character_->Go, bullet->Go)){
-                printf("collision playerbullet -> enemy\n");
+                //printf("collision playerbullet -> enemy\n");
                 bullet->Go->IsActive = false;
                 enemy->Character_->Hp -= bullet->Damage;
                 if (enemy->Character_->Hp <= 0)

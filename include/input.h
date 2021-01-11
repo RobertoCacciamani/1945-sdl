@@ -14,15 +14,16 @@ typedef struct
     SDL_Scancode left;
     SDL_Scancode right;
     SDL_Scancode shoot;
+    Mix_Chunk* explosion;
 } InputSystem;
 
 InputSystem* NewInputSystem(char*);
 void DestroyInputSystem(InputSystem*);
 void init_buttons(InputSystem*, char*);
 
-void Movement(SDL_Event*, InputSystem*, Character*, double, List*);
-boolean UpdateInputSystem(SDL_Event*, InputSystem*, Character*, double, List*);
+void Movement(SDL_Event*, InputSystem*, Character*, double);
+boolean UpdateInputSystem(SDL_Event*, InputSystem*, Character*, double);
 
-void shoot (Character*, List*);
+void shoot (Character*);
 
 #endif // INPUT_H

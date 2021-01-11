@@ -24,26 +24,29 @@ void init_buttons(InputSystem* inputsys, char* system_movement){
 InputSystem* NewInputSystem(char* system_buttons){
     InputSystem* input_ = (InputSystem*)calloc(1, sizeof(InputSystem));
     input_->IsActive = true;
+    input_->explosion = Mix_LoadWAV("./assets/audio/snd_explosion1.wav");
+    Mix_VolumeChunk(input_->explosion, SDL_MIX_MAXVOLUME / 8);
     init_buttons(input_, system_buttons);
     return input_;
 }
 
 void DestroyInputSystem(InputSystem* input_){
+    Mix_FreeChunk(input_->explosion);
     free(input_);
 }
 
-boolean UpdateInputSystem(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
+boolean UpdateInputSystem(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time){
     while (SDL_PollEvent(event)){
         if (event->type == SDL_QUIT) {
                 free(event);
                 return true;
             }
-        Movement(event, inputSys, c, delta_time, bullets);
+        Movement(event, inputSys, c, delta_time);
     }
     return false;
 }
 
-void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time, List* bullets){
+void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delta_time){
     if(inputSys->IsActive){
         if (event->type == SDL_KEYDOWN)
         {
@@ -84,18 +87,20 @@ void Movement(SDL_Event* event, InputSystem* inputSys, Character* c, double delt
                 }
             }
             if(event->key.keysym.scancode == inputSys->shoot){  // shoot
-                shoot(c, bullets);
+                shoot(c);
+                Mix_PlayChannel(-1, inputSys->explosion, 0);
             }
+
         }
     }
 }
 
-void shoot (Character* c, List* bullets){
+void shoot (Character* c){
     if (c->Go->position->y > 0)
     {
         int count = 0;
         int index = 0;
-        Node* each = bullets->__head;
+        Node* each = c->bullets->__head;
         Bullet* bullet_app;
         while (each)
         {

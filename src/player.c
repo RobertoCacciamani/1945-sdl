@@ -7,6 +7,8 @@ Player* NewPlayer(Point* p, Size* s, InputSystem* input, int hp, float speed, ch
     player->IsAlive = true;
     player->IsDead = false;
     player->score = 0;
+    player->explosion = Mix_LoadWAV("./assets/audio/snd_explosion2.wav");
+    Mix_VolumeChunk(player->explosion, SDL_MIX_MAXVOLUME / 12);
     player->life1 = NewGameObject(NewPoint(100,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
     player->life2 = NewGameObject(NewPoint(55,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
     player->life3 = NewGameObject(NewPoint(10,HEIGHT_WINDOW-90), NewSize(40, 40), (char*)"./assets/ui/life.png");
@@ -50,6 +52,7 @@ boolean UpdatePlayer(SDL_Renderer* renderer, SDL_Event* events, Player* player, 
 
     if (player->IsAlive == false && player->Lives != 0)
     {
+        Mix_PlayChannel(-1, player->explosion, 0);
         if(RenderingThisAnimation(renderer, player->Character_->Animator_, "explosion", player->Character_->Go->position, dt)){
             player->Character_->Hp = 100;
             player->Character_->Go->IsActive = true;
@@ -59,6 +62,7 @@ boolean UpdatePlayer(SDL_Renderer* renderer, SDL_Event* events, Player* player, 
         }
     }
     else if (player->IsAlive == false && player->Lives == 0 && !player->IsDead){
+        Mix_PlayChannel(-1, player->explosion, 0);
         if(RenderingThisAnimation(renderer, player->Character_->Animator_, "explosion", player->Character_->Go->position, dt)){
             player->Character_->Go->IsActive = false;
             player->IsDead = true;
@@ -72,7 +76,7 @@ boolean UpdatePlayer(SDL_Renderer* renderer, SDL_Event* events, Player* player, 
     
     RenderingPath(renderer, (char*)"./assets/ui/hp.png", NewPoint(12, HEIGHT_WINDOW -40), NewSize(126 * player->Character_->Hp / 100, 13));
 
-    int done = UpdateInputSystem(events, player->Input, player->Character_, dt, player->Character_->bullets);
+    int done = UpdateInputSystem(events, player->Input, player->Character_, dt);
 
     if (!done && !player->IsAlive && player->IsDead)
     {
@@ -90,5 +94,6 @@ void DestroyPlayer(Player* p){
     DestroyGameObject(p->life3);
     DestroyInputSystem(p->Input);
     DestroyFont(p->font);
+    Mix_FreeChunk(p->explosion);
     free(p);
 }

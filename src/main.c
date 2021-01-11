@@ -9,12 +9,14 @@
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
-    TTF_Init();
+    SDL_Init(SDL_INIT_AUDIO);
 
-    // if(!TTF_Init()){
-    //     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize font: %s\n", SDL_GetError());
-    //     return 1;
-    // }
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+    if(TTF_Init()){
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize font: %s\n", SDL_GetError());
+        return 1;
+    }
 
     Size* win = NewSize(WIDTH_WINDOW, HEIGHT_WINDOW);
 
@@ -70,6 +72,23 @@ int main() {
 
     boolean done = false;
 
+    // soundtrack
+    Mix_Music* soundTrack = Mix_LoadMUS("./assets/audio/background.mp3");
+    Mix_AllocateChannels(2);
+    
+    Mix_VolumeMusic(SDL_MIX_MAXVOLUME/20);
+    Mix_PlayMusic(soundTrack, -1);
+
+    // explosion player
+    // Mix_Chunk* explosion1 = Mix_LoadWAV("./assets/audio/snd_explosion1.wav");
+    // Mix_VolumeChunk(explosion1, SDL_MIX_MAXVOLUME / 4);
+    //Mix_PlayChannel(-1, explosion1, 0);
+    
+    // explosion enemy
+    // Mix_Chunk* explosion2 = Mix_LoadWAV("./assets/audio/snd_explosion2.wav");
+    // Mix_VolumeChunk(explosion2, SDL_MIX_MAXVOLUME / 10);
+    //Mix_PlayChannel(-1, explosion2, 0);
+
     SDL_Event* event = (SDL_Event*)calloc(1, sizeof(SDL_Event));
     while (!done) {
         SDL_RenderFlush(renderer);
@@ -117,6 +136,9 @@ int main() {
     DestroyInterface(ui);
     DestroyList(Islands);
     DestroyList(Water);
+
+    Mix_FreeMusic(soundTrack);
+    Mix_CloseAudio();
 
     return 0;
 }

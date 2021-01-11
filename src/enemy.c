@@ -8,6 +8,10 @@ Enemy* NewEnemy(Size* s, char* texture, int score){
     enemy->TimeShoot = 1;
     enemy->IsAlive = true;
     enemy->IsDead = false;
+    enemy->shoot = Mix_LoadWAV("./assets/audio/snd_explosion1.wav");
+    Mix_VolumeChunk(enemy->shoot, SDL_MIX_MAXVOLUME / 14);
+    enemy->explosion = Mix_LoadWAV("./assets/audio/snd_explosion2.wav");
+    Mix_VolumeChunk(enemy->explosion, SDL_MIX_MAXVOLUME / 15);
     GenericAddElemList(enemy->Character_->bullets, 10, (char*)"bullet", enemyBullet);
     AddAnimation(enemy->Character_, (char*)"main", texture, NewRect(enemy->Character_->Go->position, NewSize(32,32)), 3, 0.05f);
     AddAnimation(enemy->Character_, (char*)"explosion", (char*)"./assets/enemy/explosion1_strip6.png", NewRect(enemy->Character_->Go->position, NewSize(32,32)), 6, 0.1f);
@@ -28,9 +32,9 @@ void UpdateEnemy(SDL_Renderer* renderer, Enemy* enemy, double dt){
     }
     else if (enemy->Character_->Hp <= 0 && !enemy->IsDead)
     {
-        //printf("enemy morto!\n");
         enemy->IsAlive = false;
         enemy->Character_->Go->IsActive = false;
+        Mix_PlayChannel(-1, enemy->explosion, 0);
         if(RenderingThisAnimation(renderer, enemy->Character_->Animator_, "explosion", enemy->Character_->Go->position, dt)){
             enemy->IsDead = true;
         }
@@ -45,8 +49,37 @@ void ShootEnemy(Enemy* enemy, double dt){
     enemy->TimeShoot -= dt;
     if (enemy->TimeShoot <= 0)
     {
-        shoot(enemy->Character_, enemy->Character_->bullets);
+        ShootEnemyBullets(enemy);
         enemy->TimeShoot = GetRandomInRange(2,7);
+    }
+}
+
+void ShootEnemyBullets(Enemy* e){
+    if (e->Character_->Go->position->y > 0)
+    {
+        int count = 0;
+        int index = 0;
+        Node* each = e->Character_->bullets->__head;
+        Bullet* bullet_app;
+        while (each)
+        {
+            Node* next = each->next;
+            if (((Bullet*)each->data)->Go->IsActive == false)
+            {
+                bullet_app = ((Bullet*)each->data); 
+                bullet_app->Go->IsActive = true;
+                Mix_PlayChannel(-1, e->shoot, 0);
+                bullet_app->Go->position->x = e->Character_->Go->position->x + (e->Character_->Go->texture_size->Width * 0.5f) - (bullet_app->Go->texture_size->Width * 0.5f);
+                bullet_app->Go->position->y = e->Character_->Go->position->y + bullet_app->Go->texture_size->Height;
+                index = count;
+                //printf("count: %d\nactive: %d\n", index, (int)((Bullet*)each->data)->Go->IsActive);
+                break;
+            }
+            count++;
+            each = next;
+        }
+        each = NULL;
+        bullet_app = NULL;
     }
 }
 
@@ -64,6 +97,8 @@ void RespawnEnemy(Enemy* enemy){
 
 void DestroyEnemy(Enemy* e){
     DestroyCharacter(e->Character_);
+    Mix_FreeChunk(e->explosion);
+    Mix_FreeChunk(e->shoot);
     free(e);
 }
 
