@@ -45,7 +45,7 @@ int main() {
     char title[100];
     float update_time = 0.f;
     
-    Player* player = NewPlayer(NewPoint(290,180), NewSize(65,65), NewInputSystem((char*)"wasd"),100, 15000, (char*)"./assets/player/myplane_strip3.png");
+    Player* player = NewPlayer(NewPoint(290,180), NewSize(65,65), NewInputSystem((char*)"wasd"),100, 1000, (char*)"./assets/player/myplane_strip3.png");
     AddAnimation(player->Character_, (char*)"main", (char*)"./assets/player/myplane_strip3.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 3, 0.03f);
     AddAnimation(player->Character_, (char*)"explosion", (char*)"./assets/player/explosion2_strip7.png", NewRect(NewPoint(player->Character_->Go->position->x,0), player->Character_->Go->texture_size), 7, 0.1f);
     

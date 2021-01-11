@@ -10,6 +10,7 @@ typedef struct
     Point* position;
     Size* texture_size;
     boolean IsActive;
+    SDL_Rect* MyRect;
 } GameObject;
 
 enum IslandsType{Normal = 0, Vulcan, Sand};

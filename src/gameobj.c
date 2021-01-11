@@ -7,6 +7,7 @@ GameObject* NewGameObject(Point* pos, Size* texture_size, char* texture_path){
     go->texture_path = texture_path;
     go->texture_size = texture_size;
     go->IsActive = true;
+    go->MyRect = NewRect(go->position, go->texture_size);
     return go;
 }
 

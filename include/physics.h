@@ -19,4 +19,8 @@ void CheckCollisionPlayerEnemy(PhysicsManager* pm);
 Point* GetMaxPointGameObject(GameObject* go);
 boolean CheckCollisionPoint(GameObject* go1, GameObject* go2);
 boolean PointInRect(Point* p, GameObject* go);
+
+void CheckCollisionPlayerBullets(PhysicsManager* pm);
+void CheckCollisionPlayerBulletEnemy(PhysicsManager* pm, Bullet* bullet);
+
 #endif // PHYSICS_H

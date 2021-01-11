@@ -2,7 +2,7 @@
 
 Enemy* NewEnemy(Size* s, char* texture){
     Enemy* enemy = (Enemy*)calloc(1, sizeof(Enemy));
-    enemy->Character_ = NewCharacter(50, 100, texture, NewPoint(0,0), s);
+    enemy->Character_ = NewCharacter(50, 30, texture, NewPoint(0,0), s);
     enemy->score = 5;
     enemy->IsAlive = true;
     enemy->IsDead = false;
@@ -16,7 +16,7 @@ Enemy* NewEnemy(Size* s, char* texture){
 
 void UpdateEnemy(SDL_Renderer* renderer, Enemy* enemy, double dt){
     //printf("enemy x: %f y: %f \n", enemy->Character_->Go->position->x, enemy->Character_->Go->position->y);
-    //printf("enemy hp: %f\n", enemy->Character_->Hp);
+    printf("enemy hp: %f\n", enemy->Character_->Hp);
     if(enemy->Character_->Hp > 0 && enemy->Character_->Go->position->y > 0){
         //enemy->Character_->Hp -= 0.03f;
     }

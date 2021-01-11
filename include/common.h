@@ -3,6 +3,7 @@
 
 #define HEIGHT_WINDOW 480
 #define WIDTH_WINDOW 640
+#define RECTZERO NewRect(NewPoint(0,0), NewSize(0,0))
 
 #include "SDL.h"
 #include <SDL_mixer.h>
@@ -37,5 +38,6 @@ Point* RandomPoint(Size*);
 
 void DestroySize(Size*);
 void DestroyPoint(Point*);
+
 
 #endif // COMMON_H
